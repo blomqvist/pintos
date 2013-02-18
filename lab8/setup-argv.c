@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 /*
   YOUR WORK:
@@ -48,10 +49,6 @@
   
 */
 
-#define true 1
-#define false 0
-
-typedef int bool;
 
 /* "struct main_args" represent the stack as it must look when
  * entering main. The only issue: argv must point somewhere...
