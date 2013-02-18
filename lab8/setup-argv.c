@@ -48,11 +48,6 @@
   gcc -Wall -Wextra -std=gnu99 -pedantic -g setup-argv.c
   
 */
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 0fcf03e0c9833fbe1957ea843d39aa249228c958
 /* "struct main_args" represent the stack as it must look when
  * entering main. The only issue: argv must point somewhere...
  *
@@ -185,7 +180,7 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   int i = 0;
   
   /* calculate the bytes needed to store the command_line */
-  line_size = sizeof command_line;
+  line_size = strlen(command_line);
   STACK_DEBUG("# line_size = %d\n", line_size);
 
   /* round up to make it even divisible by 4 */
@@ -195,12 +190,13 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   STACK_DEBUG("# line_size (aligned) = %d\n", line_size);
 
   /* calculate how many words the command_line contains */
-  char* temp_str = command_line; //strtok_r ruins command_line if used
-  char* progress;
-  while(strtok_r(temp_str, " ", &progress) != NULL)
-  {
+  char* temp_str = (char*)command_line; //strtok_r ruins command_line if used
+  char* token;
+  for(
+    token = strtok_r(temp_str, " ", &ptr_save); 
+    token != NULL; 
+    token = strtok_r(NULL, " ", &ptr_save))
     ++argc;
-  }
   
   STACK_DEBUG("# argc = %d\n", argc);
 
@@ -209,16 +205,16 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   STACK_DEBUG("# total_size = %d\n", total_size);
   
   /* calculate where the final stack top will be located */
-  esp = (&(esp->argc) - 4);
+  esp = (struct main_args*)((long)stack_top - total_size);
   
   /* setup return address and argument count */
-  esp->ret = *esp;
-  esp->argc = *(&esp + 4);
+  esp->ret = NULL;
+  esp->argc = (int)(*(&esp + 4));
   /* calculate where in the memory the argv array starts */
-  esp->argv = &esp + 8;
+  esp->argv = (char**)(&esp + 8);
   
   /* calculate where in the memory the words are stored */
-  cmd_line_on_stack = total_size - line_size;
+  cmd_line_on_stack = (char*)(total_size - line_size);
   
   /* copy the command_line to where it should be in the stack */
   char* temp_argv[argc];
