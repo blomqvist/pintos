@@ -49,6 +49,10 @@
   
 */
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0fcf03e0c9833fbe1957ea843d39aa249228c958
 /* "struct main_args" represent the stack as it must look when
  * entering main. The only issue: argv must point somewhere...
  *
