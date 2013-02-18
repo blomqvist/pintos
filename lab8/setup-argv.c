@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 /*
   YOUR WORK:
@@ -48,11 +49,6 @@
   
 */
 
-#define true 1
-#define false 0
-
-typedef int bool;
-
 /* "struct main_args" represent the stack as it must look when
  * entering main. The only issue: argv must point somewhere...
  *
@@ -93,18 +89,17 @@ struct main_args
  */
 void dump(void* ptr, int size)
 {
-  int i;
-  
   printf("Adress  \thex-data \tchar-data\n");
   
-  for (i = size - 1; i >= 0; --i)
+  int i;
+  for(i = size - 1; i >= 0; --i)
   {
     void** adr = (void**)((unsigned)ptr + i);
     unsigned char* byte = (unsigned char*)((unsigned)ptr + i);
 
     printf("%08x\t", (unsigned)ptr + i); /* address */
       
-    if ((i % 4) == 0)
+    if((i % 4) == 0)
       /* seems we're actually forbidden to read unaligned adresses */
       printf("%08x\t", (unsigned)*adr); /* content interpreted as address */
     else
@@ -175,7 +170,7 @@ void* setup_main_stack(const char* command_line, void* stack_top)
    * pointed out by that address a "struct main_args" is found.
    * That is: "esp" is a pointer to "struct main_args" */
   struct main_args* esp;
-  int argc;
+  int argc = 0;
   int total_size;
   int line_size;
   /* "cmd_line_on_stack" and "ptr_save" are variables that each store
@@ -186,36 +181,43 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   int i = 0;
   
   /* calculate the bytes needed to store the command_line */
-  line_size = ??? ;
+  line_size = sizeof command_line;
   STACK_DEBUG("# line_size = %d\n", line_size);
 
   /* round up to make it even divisible by 4 */
-  line_size = ??? ;
+  unsigned div_rest = line_size % 4;
+  if(div_rest > 0)
+    line_size += 4 - div_rest;
   STACK_DEBUG("# line_size (aligned) = %d\n", line_size);
 
-  /* calculate how many words the command_line contain */
-  argc = ??? ;
+  /* calculate how many words the command_line contains */
+  char* temp_str = command_line; //strtok_r ruins command_line if used
+  char* progress;
+  while(strtok_r(temp_str, " ", &progress) != NULL)
+  {
+    ++argc;
+  }
+  
   STACK_DEBUG("# argc = %d\n", argc);
 
   /* calculate the size needed on our simulated stack */
-  total_size = ??? ;
+  total_size = 12 + (4 * argc) + line_size;
   STACK_DEBUG("# total_size = %d\n", total_size);
   
-
   /* calculate where the final stack top will be located */
-  esp = ??? ;
+  esp = (&(esp->argc) - 4);
   
   /* setup return address and argument count */
-  esp->ret = ??? ;
-  esp->argc = ??? ;
+  esp->ret = *esp;
+  esp->argc = *(&esp + 4);
   /* calculate where in the memory the argv array starts */
-  esp->argv = ??? ;
+  esp->argv = &esp + 8;
   
-  /* calculate where in the memory the words is stored */
-  cmd_line_on_stack = ??? ;
-
+  /* calculate where in the memory the words are stored */
+  cmd_line_on_stack = total_size - line_size;
+  
   /* copy the command_line to where it should be in the stack */
-
+  char* temp_argv[argc];
   /* build argv array and insert null-characters after each word */
   
   return esp; /* the new stack top */
@@ -248,10 +250,9 @@ int main()
     line[i] = (char)0xCC;
   
   /* print the argument vector to see if it worked */
-  for (i = 0; i < esp->argc; ++i)
-  {
+  for(i = 0; i < esp->argc; ++i)
     printf("argv[%d] = %s\n", i, esp->argv[i]);
-  }
+  
   printf("argv[%d] = 0x%p\n", i, esp->argv[i]);
 
   free(simulated_stack);
