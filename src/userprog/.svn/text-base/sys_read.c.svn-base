@@ -1,0 +1,35 @@
+//
+//  sys_read.c
+//  
+//
+//  Created by Niklas Blomqvist on 2013-02-16.
+//
+//
+
+#include <stdio.h>
+#include "sys_read.h"
+#include "threads/interrupt.h"
+
+int sys_read (int fd, char* buffer, unsigned length)
+{
+  unsigned i = 0;
+  char key;
+  intr_set_level(INTR_OFF);
+  for (i = 0; i != length; i++)
+  {
+    key = (char)input_getc();
+    if (key == '\r')
+    {
+      key = '\n';
+      buffer[i] = key;
+      break;
+    }
+    else
+      buffer[i] = key;
+    
+    putbuf(&buffer[i], 1);
+  }
+  intr_set_level(INTR_ON);
+  
+  return length;
+}

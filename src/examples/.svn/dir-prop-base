@@ -1,0 +1,24 @@
+K 10
+svn:ignore
+V 104
+cat
+cmp
+cp
+echo
+halt
+hex-dump
+ls
+mcat
+mcp
+mkdir
+pwd
+rm
+shell
+bubsort
+insult
+lineup
+matmult
+recursor
+*.d
+
+END
