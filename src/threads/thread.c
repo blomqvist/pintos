@@ -141,7 +141,7 @@ void
 thread_tick (void) 
 {
   struct thread *t = thread_current ();
-
+  
   /* Update statistics. */
   if (t == idle_thread)
     idle_ticks++;
@@ -151,7 +151,7 @@ thread_tick (void)
 #endif
   else
     kernel_ticks++;
-
+  
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
     intr_yield_on_return ();
@@ -159,7 +159,7 @@ thread_tick (void)
 
 /* Prints thread statistics. */
 void
-thread_print_stats (void) 
+thread_print_stats (void)
 {
   printf ("Thread: %lld idle ticks, %lld kernel ticks, %lld user ticks\n",
           idle_ticks, kernel_ticks, user_ticks);

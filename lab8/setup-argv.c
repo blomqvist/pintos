@@ -190,13 +190,7 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   STACK_DEBUG("# line_size (aligned) = %d\n", line_size);
 
   /* calculate how many words the command_line contains */
-  char* temp_str = (char*)command_line; //strtok_r ruins command_line if used
-  char* token;
-  for(
-    token = strtok_r(temp_str, " ", &ptr_save); 
-    token != NULL; 
-    token = strtok_r(NULL, " ", &ptr_save))
-    ++argc;
+  argc = count_args(command_line, " ");
   
   STACK_DEBUG("# argc = %d\n", argc);
 
@@ -219,6 +213,18 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   /* copy the command_line to where it should be in the stack */
   char* temp_argv[argc];
   /* build argv array and insert null-characters after each word */
+  char* temp_str = (char*)command_line; //strtok_r ruins command_line if used
+  char* token;
+  for(token = strtok_r(temp_str, " ", &ptr_save);
+      token != NULL;
+      token = strtok_r(NULL, " ", &ptr_save))
+      {
+        temp_argv[i] = token;
+        printf("temp_argv[%i] is: %s\n", i, temp_argv[i]);
+        ++i;
+      }
+  
+  esp->argv = temp_argv;
   
   return esp; /* the new stack top */
 }
