@@ -87,10 +87,10 @@ int main()
   for (i = 0; i < TEST_CASE_COUNT; ++i)
   {
     /* Testa algoritmen med ett givet intervall (en buffer). */
-    /*start_evaluate_algorithm(test_case[i].start, test_case[i].length);
+    start_evaluate_algorithm(test_case[i].start, test_case[i].length);
     result = verify_fix_length(test_case[i].start, test_case[i].length);
     evaluate(result);
-    end_evaluate_algorithm();*/
+    end_evaluate_algorithm();
     
     /* Testa algoritmen med en sträng. */
     start_evaluate_algorithm(test_case[i].start, test_case[i].length);
