@@ -7,11 +7,11 @@
 
 /* Auxiliary data for vsnprintf_helper(). */
 struct vsnprintf_aux 
-  {
-    char *p;            /* Current output position. */
-    int length;         /* Length of output string. */
-    int max_length;     /* Max length of output string. */
-  };
+{
+  char *p;            /* Current output position. */
+  int length;         /* Length of output string. */
+  int max_length;     /* Max length of output string. */
+};
 
 static void vsnprintf_helper (char, void *);
 

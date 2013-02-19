@@ -7,7 +7,7 @@
  PAGE_OFFSET = USER_ADR % PAGE_SIZE; // resten vid divisionen
  FRAME_NUMBER = PAGETABLE[PAGE_NUMBER];
  PHYS_ADR = FRAME_NUMBER + PAGE_OFFSET;
-*/
+ */
 
 /* Kontrollera alla adresser från och med start till och inte med
  * (start+length). */
@@ -95,7 +95,7 @@ int main()
     /* Testa algoritmen med en sträng. */
     start_evaluate_algorithm(test_case[i].start, test_case[i].length);
     result = verify_variable_length(test_case[i].start);
-    evaluate(result);    
+    evaluate(result);
     end_evaluate_algorithm();
   }
   return 0;
