@@ -1,8 +1,0 @@
-K 10
-svn:ignore
-V 40
-setitimer-helper
-squish-pty
-squish-unix
-
-END
