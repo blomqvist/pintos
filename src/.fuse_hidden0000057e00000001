@@ -1,0 +1,1 @@
+gmake -j8 -C examples/ ; gmake -j8 -C userprog/ ; cd userprog/build/ ; pintos -p ../../examples/halt -a halt -v -k --fs-disk=2 -- -f -q run sumargv ; cd ../..
