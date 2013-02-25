@@ -191,7 +191,6 @@ void* setup_main_stack(const char* command_line, void* stack_top)
 
   /* calculate how many words the command_line contains */
   argc = count_args(command_line, " ");
-  
   STACK_DEBUG("# argc = %d\n", argc);
 
   /* calculate the size needed on our simulated stack */
@@ -199,32 +198,32 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   STACK_DEBUG("# total_size = %d\n", total_size);
   
   /* calculate where the final stack top will be located */
-  esp = (struct main_args*)((long)stack_top - total_size);
+  esp = stack_top - total_size;
   
   /* setup return address and argument count */
-  esp->ret = NULL;
-  esp->argc = (int)(*(&esp + 4));
+  esp->ret = 0x00;
+  esp->argc = argc;
   /* calculate where in the memory the argv array starts */
-  esp->argv = (char**)(&esp + 8);
+  esp->argv = (int)esp + argc * 6;
   
   /* calculate where in the memory the words are stored */
   cmd_line_on_stack = (char*)(total_size - line_size);
   
   /* copy the command_line to where it should be in the stack */
-  char* temp_argv[argc];
+  
   /* build argv array and insert null-characters after each word */
+  //char* temp_argv[argc];
   char* temp_str = (char*)command_line; //strtok_r ruins command_line if used
   char* token;
   for(token = strtok_r(temp_str, " ", &ptr_save);
-      token != NULL;
-      token = strtok_r(NULL, " ", &ptr_save))
-      {
-        temp_argv[i] = token;
-        printf("temp_argv[%i] is: %s\n", i, temp_argv[i]);
-        ++i;
-      }
+    token != NULL;
+    token = strtok_r(NULL, " ", &ptr_save))
+  {
+    //printf("temp_argv[%i] is: %s\n", i, temp_argv[i]);
+    esp->argv[i] = (int)esp + cmd_line_on_stack + 4 * (++i);
+  }
   
-  esp->argv = temp_argv;
+  //esp->argv = temp_argv;
   
   return esp; /* the new stack top */
 }
