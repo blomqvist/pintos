@@ -30,17 +30,17 @@ memmove (void *dst_, const void *src_, size_t size)
   ASSERT (src != NULL || size == 0);
 
   if (dst < src) 
-    {
-      while (size-- > 0)
-        *dst++ = *src++;
-    }
-  else 
-    {
-      dst += size;
-      src += size;
-      while (size-- > 0)
-        *--dst = *--src;
-    }
+  {
+    while (size-- > 0)
+      *dst++ = *src++;
+  }
+  else
+  {
+    dst += size;
+    src += size;
+    while (size-- > 0)
+      *--dst = *--src;
+  }
 
   return dst;
 }

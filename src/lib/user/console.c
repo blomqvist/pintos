@@ -46,13 +46,13 @@ putchar (int c)
 }
 
 /* Auxiliary data for vhprintf_helper(). */
-struct vhprintf_aux 
-  {
-    char buf[64];       /* Character buffer. */
-    char *p;            /* Current position in buffer. */
-    int char_cnt;       /* Total characters written so far. */
-    int handle;         /* Output file handle. */
-  };
+struct vhprintf_aux
+{
+  char buf[64];       /* Character buffer. */
+  char *p;            /* Current position in buffer. */
+  int char_cnt;       /* Total characters written so far. */
+  int handle;         /* Output file handle. */
+};
 
 static void add_char (char, void *);
 static void flush (struct vhprintf_aux *);

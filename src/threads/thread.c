@@ -35,11 +35,11 @@ static struct lock tid_lock;
 
 /* Stack frame for kernel_thread(). */
 struct kernel_thread_frame 
-  {
-    void *eip;                  /* Return address. */
-    thread_func *function;      /* Function to call. */
-    void *aux;                  /* Auxiliary data for function. */
-  };
+{
+  void *eip;                  /* Return address. */
+  thread_func *function;      /* Function to call. */
+  void *aux;                  /* Auxiliary data for function. */
+};
 
 /* Statistics. */
 static long long idle_ticks;    /* # of timer ticks spent idle. */
@@ -152,7 +152,7 @@ thread_tick (void)
   else
     kernel_ticks++;
   
-  /* Enforce preemption. */
+  /* Enforce preemption. Tvinga företräde! */
   if (++thread_ticks >= TIME_SLICE)
     intr_yield_on_return ();
 }
@@ -572,7 +572,7 @@ uint32_t thread_stack_ofs = offsetof (struct thread, stack);
 
 
 
-/* DEBUG code added by klaar@ida */
+/* DEBUG code added by klaar @ida */
 #include "init.h"
 static unsigned DEBUG_thread_alive_count;
 static struct lock DEBUG_thread_alive_lock;

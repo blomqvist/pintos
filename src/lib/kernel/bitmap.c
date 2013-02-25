@@ -25,10 +25,10 @@ typedef unsigned long elem_type;
    inside, it's an array of elem_type (defined above) that
    simulates an array of bits. */
 struct bitmap
-  {
-    size_t bit_cnt;     /* Number of bits. */
-    elem_type *bits;    /* Elements that represent bits. */
-  };
+{
+  size_t bit_cnt;     /* Number of bits. */
+  elem_type *bits;    /* Elements that represent bits. */
+};
 
 /* Returns the index of the element that contains the bit
    numbered BIT_IDX. */
@@ -80,16 +80,16 @@ bitmap_create (size_t bit_cnt)
 {
   struct bitmap *b = malloc (sizeof *b);
   if (b != NULL)
+  {
+    b->bit_cnt = bit_cnt;
+    b->bits = malloc (byte_cnt (bit_cnt));
+    if (b->bits != NULL || bit_cnt == 0)
     {
-      b->bit_cnt = bit_cnt;
-      b->bits = malloc (byte_cnt (bit_cnt));
-      if (b->bits != NULL || bit_cnt == 0)
-        {
-          bitmap_set_all (b, false);
-          return b;
-        }
-      free (b);
+      bitmap_set_all (b, false);
+      return b;
     }
+    free (b);
+  }
   return NULL;
 }
 
@@ -123,11 +123,11 @@ bitmap_buf_size (size_t bit_cnt)
 void
 bitmap_destroy (struct bitmap *b) 
 {
-  if (b != NULL) 
-    {
-      free (b->bits);
-      free (b);
-    }
+  if (b != NULL)
+  {
+    free (b->bits);
+    free (b);
+  }
 }
 
 /* Bitmap size. */
@@ -148,9 +148,13 @@ bitmap_set (struct bitmap *b, size_t idx, bool value)
   ASSERT (b != NULL);
   ASSERT (idx < b->bit_cnt);
   if (value)
+  {
     bitmap_mark (b, idx);
+  }
   else
+  {
     bitmap_reset (b, idx);
+  }
 }
 
 /* Atomically sets the bit numbered BIT_IDX in B to true. */
@@ -225,7 +229,9 @@ bitmap_set_multiple (struct bitmap *b, size_t start, size_t cnt, bool value)
   ASSERT (start + cnt <= b->bit_cnt);
 
   for (i = 0; i < cnt; i++)
+  {
     bitmap_set (b, start + i, value);
+  }
 }
 
 /* Returns the number of bits in B between START and START + CNT,

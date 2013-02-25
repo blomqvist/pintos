@@ -23,10 +23,10 @@ atoi (const char *s)
   if (*s == '+')
     s++;
   else if (*s == '-')
-    {
-      negative = true;
-      s++;
-    }
+  {
+    negative = true;
+    s++;
+  }
 
   /* Parse digits.  We always initially parse the value as
      negative, and then make it positive later, because the
@@ -71,11 +71,11 @@ do_swap (unsigned char *array, size_t a_idx, size_t b_idx, size_t size)
   size_t i;
 
   for (i = 0; i < size; i++)
-    {
-      unsigned char t = a[i];
-      a[i] = b[i];
-      b[i] = t;
-    }
+  {
+    unsigned char t = a[i];
+    a[i] = b[i];
+    b[i] = t;
+  }
 }
 
 /* Compares elements with 1-based indexes A_IDX and B_IDX in
@@ -99,27 +99,27 @@ heapify (unsigned char *array, size_t i, size_t cnt, size_t size,
          void *aux) 
 {
   for (;;) 
-    {
-      /* Set `max' to the index of the largest element among I
-         and its children (if any). */
-      size_t left = 2 * i;
-      size_t right = 2 * i + 1;
-      size_t max = i;
-      if (left <= cnt && do_compare (array, left, max, size, compare, aux) > 0)
-        max = left;
-      if (right <= cnt
-          && do_compare (array, right, max, size, compare, aux) > 0) 
-        max = right;
-
-      /* If the maximum value is already in element I, we're
-         done. */
-      if (max == i)
-        break;
-
-      /* Swap and continue down the heap. */
-      do_swap (array, i, max, size);
-      i = max;
-    }
+  {
+    /* Set `max' to the index of the largest element among I
+     and its children (if any). */
+    size_t left = 2 * i;
+    size_t right = 2 * i + 1;
+    size_t max = i;
+    if (left <= cnt && do_compare (array, left, max, size, compare, aux) > 0)
+      max = left;
+    if (right <= cnt
+        && do_compare (array, right, max, size, compare, aux) > 0)
+      max = right;
+    
+    /* If the maximum value is already in element I, we're
+     done. */
+    if (max == i)
+      break;
+    
+    /* Swap and continue down the heap. */
+    do_swap (array, i, max, size);
+    i = max;
+  }
 }
 
 /* Sorts ARRAY, which contains CNT elements of SIZE bytes each,
@@ -144,11 +144,11 @@ sort (void *array, size_t cnt, size_t size,
     heapify (array, i, cnt, size, compare, aux);
 
   /* Sort the heap. */
-  for (i = cnt; i > 1; i--) 
-    {
-      do_swap (array, 1, i, size);
-      heapify (array, 1, i - 1, size, compare, aux); 
-    }
+  for (i = cnt; i > 1; i--)
+  {
+    do_swap (array, 1, i, size);
+    heapify (array, 1, i - 1, size, compare, aux);
+  }
 }
 
 /* Searches ARRAY, which contains CNT elements of SIZE bytes
@@ -190,18 +190,18 @@ binary_search (const void *key, const void *array, size_t cnt, size_t size,
   const unsigned char *last = array + size * cnt;
 
   while (first < last) 
-    {
-      size_t range = (last - first) / size;
-      const unsigned char *middle = first + (range / 2) * size;
-      int cmp = compare (key, middle, aux);
-
-      if (cmp < 0) 
-        last = middle;
-      else if (cmp > 0) 
-        first = middle + size;
-      else
-        return (void *) middle;
-    }
+  {
+    size_t range = (last - first) / size;
+    const unsigned char *middle = first + (range / 2) * size;
+    int cmp = compare (key, middle, aux);
+    
+    if (cmp < 0)
+      last = middle;
+    else if (cmp > 0)
+      first = middle + size;
+    else
+      return (void *) middle;
+  }
   
   return NULL;
 }

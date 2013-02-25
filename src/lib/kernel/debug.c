@@ -22,25 +22,25 @@ debug_panic (const char *file, int line, const char *function,
   console_panic ();
 
   level++;
-  if (level == 1) 
-    {
-      printf ("Kernel PANIC at %s:%d in %s(): ", file, line, function);
-
-      va_start (args, message);
-      vprintf (message, args);
-      printf ("\n");
-      va_end (args);
-
-      debug_backtrace ();
-    }
+  if (level == 1)
+  {
+    printf ("Kernel PANIC at %s:%d in %s(): ", file, line, function);
+    
+    va_start (args, message);
+    vprintf (message, args);
+    printf ("\n");
+    va_end (args);
+    
+    debug_backtrace ();
+  }
   else if (level == 2)
     printf ("Kernel PANIC recursion at %s:%d in %s().\n",
             file, line, function);
-  else 
-    {
-      /* Don't print anything: that's probably why we recursed. */
-    }
-
+  else
+  {
+    /* Don't print anything: that's probably why we recursed. */
+  }
+  
   serial_flush ();
   if (power_off_when_done)
     power_off ();

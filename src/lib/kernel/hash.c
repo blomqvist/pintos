@@ -33,10 +33,10 @@ hash_init (struct hash *h,
   h->aux = aux;
 
   if (h->buckets != NULL) 
-    {
-      hash_clear (h, NULL);
-      return true;
-    }
+  {
+    hash_clear (h, NULL);
+    return true;
+  }
   else
     return false;
 }
@@ -56,20 +56,20 @@ hash_clear (struct hash *h, hash_action_func *destructor)
   size_t i;
 
   for (i = 0; i < h->bucket_cnt; i++) 
-    {
-      struct list *bucket = &h->buckets[i];
-
-      if (destructor != NULL) 
-        while (!list_empty (bucket)) 
-          {
-            struct list_elem *list_elem = list_pop_front (bucket);
-            struct hash_elem *hash_elem = list_elem_to_hash_elem (list_elem);
-            destructor (hash_elem, h->aux);
-          }
-
-      list_init (bucket); 
-    }    
-
+  {
+    struct list *bucket = &h->buckets[i];
+    
+    if (destructor != NULL)
+      while (!list_empty (bucket))
+      {
+        struct list_elem *list_elem = list_pop_front (bucket);
+        struct hash_elem *hash_elem = list_elem_to_hash_elem (list_elem);
+        destructor (hash_elem, h->aux);
+      }
+    
+    list_init (bucket);
+  }
+  
   h->elem_cnt = 0;
 }
 
@@ -146,10 +146,10 @@ hash_delete (struct hash *h, struct hash_elem *e)
 {
   struct hash_elem *found = find_elem (h, find_bucket (h, e), e);
   if (found != NULL) 
-    {
-      remove_elem (h, found);
-      rehash (h); 
-    }
+  {
+    remove_elem (h, found);
+    rehash (h);
+  }
   return found;
 }
 
@@ -167,16 +167,16 @@ hash_apply (struct hash *h, hash_action_func *action)
   ASSERT (action != NULL);
 
   for (i = 0; i < h->bucket_cnt; i++) 
+  {
+    struct list *bucket = &h->buckets[i];
+    struct list_elem *elem, *next;
+    
+    for (elem = list_begin (bucket); elem != list_end (bucket); elem = next)
     {
-      struct list *bucket = &h->buckets[i];
-      struct list_elem *elem, *next;
-
-      for (elem = list_begin (bucket); elem != list_end (bucket); elem = next) 
-        {
-          next = list_next (elem);
-          action (list_elem_to_hash_elem (elem), h->aux);
-        }
+      next = list_next (elem);
+      action (list_elem_to_hash_elem (elem), h->aux);
     }
+  }
 }
 
 /* Initializes I for iterating hash table H.
@@ -222,14 +222,14 @@ hash_next (struct hash_iterator *i)
 
   i->elem = list_elem_to_hash_elem (list_next (&i->elem->list_elem));
   while (i->elem == list_elem_to_hash_elem (list_end (i->bucket)))
+  {
+    if (++i->bucket >= i->hash->buckets + i->hash->bucket_cnt)
     {
-      if (++i->bucket >= i->hash->buckets + i->hash->bucket_cnt)
-        {
-          i->elem = NULL;
-          break;
-        }
-      i->elem = list_elem_to_hash_elem (list_begin (i->bucket));
+      i->elem = NULL;
+      break;
     }
+    i->elem = list_elem_to_hash_elem (list_begin (i->bucket));
+  }
   
   return i->elem;
 }
@@ -316,12 +316,12 @@ find_elem (struct hash *h, struct list *bucket, struct hash_elem *e)
 {
   struct list_elem *i;
 
-  for (i = list_begin (bucket); i != list_end (bucket); i = list_next (i)) 
-    {
-      struct hash_elem *hi = list_elem_to_hash_elem (i);
-      if (!h->less (hi, e, h->aux) && !h->less (e, hi, h->aux))
-        return hi; 
-    }
+  for (i = list_begin (bucket); i != list_end (bucket); i = list_next (i))
+  {
+    struct hash_elem *hi = list_elem_to_hash_elem (i);
+    if (!h->less (hi, e, h->aux) && !h->less (e, hi, h->aux))
+      return hi;
+  }
   return NULL;
 }
 
@@ -374,40 +374,40 @@ rehash (struct hash *h)
   /* Don't do anything if the bucket count wouldn't change. */
   if (new_bucket_cnt == old_bucket_cnt)
     return;
-
+  
   /* Allocate new buckets and initialize them as empty. */
   new_buckets = malloc (sizeof *new_buckets * new_bucket_cnt);
-  if (new_buckets == NULL) 
-    {
-      /* Allocation failed.  This means that use of the hash table will
-         be less efficient.  However, it is still usable, so
-         there's no reason for it to be an error. */
-      return;
-    }
-  for (i = 0; i < new_bucket_cnt; i++) 
+  if (new_buckets == NULL)
+  {
+    /* Allocation failed.  This means that use of the hash table will
+     be less efficient.  However, it is still usable, so
+     there's no reason for it to be an error. */
+    return;
+  }
+  for (i = 0; i < new_bucket_cnt; i++)
     list_init (&new_buckets[i]);
-
+  
   /* Install new bucket info. */
   h->buckets = new_buckets;
   h->bucket_cnt = new_bucket_cnt;
 
   /* Move each old element into the appropriate new bucket. */
-  for (i = 0; i < old_bucket_cnt; i++) 
+  for (i = 0; i < old_bucket_cnt; i++)
+  {
+    struct list *old_bucket;
+    struct list_elem *elem, *next;
+    
+    old_bucket = &old_buckets[i];
+    for (elem = list_begin (old_bucket);
+         elem != list_end (old_bucket); elem = next)
     {
-      struct list *old_bucket;
-      struct list_elem *elem, *next;
-
-      old_bucket = &old_buckets[i];
-      for (elem = list_begin (old_bucket);
-           elem != list_end (old_bucket); elem = next) 
-        {
-          struct list *new_bucket
-            = find_bucket (h, list_elem_to_hash_elem (elem));
-          next = list_next (elem);
-          list_remove (elem);
-          list_push_front (new_bucket, elem);
-        }
+      struct list *new_bucket
+      = find_bucket (h, list_elem_to_hash_elem (elem));
+      next = list_next (elem);
+      list_remove (elem);
+      list_push_front (new_bucket, elem);
     }
+  }
 
   free (old_buckets);
 }
