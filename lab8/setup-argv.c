@@ -177,7 +177,6 @@ void* setup_main_stack(const char* command_line, void* stack_top)
    * sequence) can be found. */
   char* cmd_line_on_stack;
   char* ptr_save;
-  int i = 0;
   
   /* calculate the bytes needed to store the command_line */
   line_size = strlen(command_line);
@@ -198,31 +197,41 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   STACK_DEBUG("# total_size = %d\n", total_size);
   
   /* calculate where the final stack top will be located */
-  esp = stack_top - total_size;
+  esp = (void*)((int)stack_top - total_size);
   
   /* setup return address and argument count */
   esp->ret = 0x00;
   esp->argc = argc;
   /* calculate where in the memory the argv array starts */
-  esp->argv = (int)esp + argc * 6;
+  esp->argv = (char**)((int)esp + argc * 6);
   
   /* calculate where in the memory the words are stored */
   cmd_line_on_stack = (char*)((int)esp + (total_size - line_size));
   
   /* copy the command_line to where it should be in the stack */
-  /* build argv array and insert null-characters after each word */
+  //*cmd_line_on_stack = command_line;
   
-  //char* temp_argv[argc];
-  char* temp_str = (char*)command_line; //strtok_r ruins command_line if used
+  //printf("cmd_line_on_stack = %s\n", cmd_line_on_stack);
+  //exit(0);
+  /* build argv array and insert null-characters after each word */
+  char* temp_str = (char*)command_line;
   char* token;
+  char* cmd_line_on_stack_ptr = cmd_line_on_stack;
+  int i = 0;
+  
   for(token = strtok_r(temp_str, " ", &ptr_save);
     token != NULL;
     token = strtok_r(NULL, " ", &ptr_save))
   {
-    //printf("temp_argv[%i] is: %s\n", i, temp_argv[i]);
-    esp->argv[i] = cmd_line_on_stack + 4 * i;
-    ++i;
+    int token_len = strlen(token);
+    strncpy(cmd_line_on_stack_ptr, token, token_len);
+    esp->argv[i] = cmd_line_on_stack_ptr;
+    cmd_line_on_stack_ptr += token_len;
+    *cmd_line_on_stack_ptr++ = '\0';
+    //esp->argv[++i] = NULL;
+    i++;
   }
+  //*(esp->argv[i]) = NULL;
   
   return esp; /* the new stack top */
 }
