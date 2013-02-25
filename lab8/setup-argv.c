@@ -207,11 +207,11 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   esp->argv = (int)esp + argc * 6;
   
   /* calculate where in the memory the words are stored */
-  cmd_line_on_stack = (char*)(total_size - line_size);
+  cmd_line_on_stack = (char*)((int)esp + (total_size - line_size));
   
   /* copy the command_line to where it should be in the stack */
-  
   /* build argv array and insert null-characters after each word */
+  
   //char* temp_argv[argc];
   char* temp_str = (char*)command_line; //strtok_r ruins command_line if used
   char* token;
@@ -220,10 +220,9 @@ void* setup_main_stack(const char* command_line, void* stack_top)
     token = strtok_r(NULL, " ", &ptr_save))
   {
     //printf("temp_argv[%i] is: %s\n", i, temp_argv[i]);
-    esp->argv[i] = (int)esp + cmd_line_on_stack + 4 * (++i);
+    esp->argv[i] = cmd_line_on_stack + 4 * i;
+    ++i;
   }
-  
-  //esp->argv = temp_argv;
   
   return esp; /* the new stack top */
 }
