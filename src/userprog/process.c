@@ -12,6 +12,7 @@
 #include "threads/thread.h"
 #include "threads/vaddr.h"     /* PHYS_BASE */
 #include "threads/interrupt.h" /* if_ */
+#include "lib/string.h"        /* strtok_r */
 
 /* Headers not yet used that you may need for various reasons. */
 #include "threads/synch.h"
@@ -20,6 +21,8 @@
 
 #include "userprog/flist.h"
 #include "userprog/plist.h"
+
+#include "userprog/stack_helper.h"
 
 /* HACK defines code you must remove and implement in a proper way */
 #define HACK
@@ -54,6 +57,7 @@ struct parameters_to_start_process
 
 static void
 start_process(struct parameters_to_start_process* parameters) NO_RETURN;
+
 
 /* Starts a new proccess by creating a new thread to run it. The
    process is loaded from the file specified in the COMMAND_LINE and
@@ -138,23 +142,10 @@ start_process (struct parameters_to_start_process* parameters)
   
   if (success)
   {
-    /* We managed to load the new program to a process, and have
-       allocated memory for a process stack. The stack top is in
-       if_.esp, now we must prepare and place the arguments to main on
-       the stack. */
-  
-    /* A temporary solution is to modify the stack pointer to
-       "pretend" the arguments are present on the stack. A normal
-       C-function expects the stack to contain, in order, the return
-       address, the first argument, the second argument etc. */
     
-    HACK if_.esp -= 12; /* Unacceptable solution. */
-
-    /* The stack and stack pointer should be setup correct just before
-       the process start, so this is the place to dump stack content
-       for debug purposes. Disable the dump when it works. */
+    if_.esp = setup_main_stack(parameters->command_line, (void*)PHYS_BASE);
     
-//    dump_stack ( PHYS_BASE + 15, PHYS_BASE - if_.esp + 16 );
+    //dump_stack ( PHYS_BASE + 15, PHYS_BASE - if_.esp + 16 );
 
   }
 
