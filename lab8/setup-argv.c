@@ -197,16 +197,16 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   STACK_DEBUG("# total_size = %d\n", total_size);
   
   /* calculate where the final stack top will be located */
-  esp = (void*)((int)stack_top - total_size);
+  esp = (void*)((int)stack_top - total_size - 4);
   
   /* setup return address and argument count */
   esp->ret = 0x00;
   esp->argc = argc;
   /* calculate where in the memory the argv array starts */
-  esp->argv = (char**)((int)esp + argc * 6);
+  esp->argv = (char**)((int)esp + 12);
   
   /* calculate where in the memory the words are stored */
-  cmd_line_on_stack = (char*)((int)esp + (total_size - line_size));
+  cmd_line_on_stack = (char*)((int)esp + (total_size - line_size) + 4);
   
   /* copy the command_line to where it should be in the stack */
   //*cmd_line_on_stack = command_line;
@@ -216,7 +216,6 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   /* build argv array and insert null-characters after each word */
   char* temp_str = (char*)command_line;
   char* token;
-  char* cmd_line_on_stack_ptr = cmd_line_on_stack;
   int i = 0;
   
   for(token = strtok_r(temp_str, " ", &ptr_save);
@@ -224,10 +223,10 @@ void* setup_main_stack(const char* command_line, void* stack_top)
     token = strtok_r(NULL, " ", &ptr_save))
   {
     int token_len = strlen(token);
-    strncpy(cmd_line_on_stack_ptr, token, token_len);
-    esp->argv[i] = cmd_line_on_stack_ptr;
-    cmd_line_on_stack_ptr += token_len;
-    *cmd_line_on_stack_ptr++ = '\0';
+    strncpy(cmd_line_on_stack, token, token_len);
+    esp->argv[i] = cmd_line_on_stack;
+    cmd_line_on_stack += token_len;
+    *cmd_line_on_stack++ = '\0';
     //esp->argv[++i] = NULL;
     i++;
   }
