@@ -1,4 +1,5 @@
-#include <stdlib.h>
+#include "threads/malloc.h"
+#include "filesys/filesys.h"
 #include <stddef.h>
 #include <stdio.h>
 #include "flist.h"
@@ -31,7 +32,7 @@ key_t map_insert(struct map* m, value_t v)
     m->value = v;
     
     // Allokera minne för nästa objekt i map:en
-    m->next = malloc(sizeof(struct map));
+    m->next = (void*)malloc(sizeof(struct map));
     map_init(m->next);
     m->next->key = m->key + 1;
     
@@ -49,13 +50,13 @@ value_t map_remove(struct map* m, key_t k)
   value_t* temp_value = NULL;
   if(m->key == k) { // v finns i första elementet
     if (m->next == NULL) {  // första och enda elementet
-      temp_value = m->value;
+      temp_value = (value_t*)m->value;
       free(m); // töm m i minnet
-      m = malloc(sizeof(struct map));
+      m = (void*)malloc(sizeof(struct map));
       map_init(m); // ge standardvärden
     }
     else { // vi har fler följande element
-      temp_value = m->value;
+      temp_value = (value_t*)m->value;
       struct map* temp = m;
       m = m->next; // första elementet blir efterföljande element
       free(temp); // frigör (det som var) första elementet
@@ -65,13 +66,13 @@ value_t map_remove(struct map* m, key_t k)
   // [x] -> [n]->key
   else if(m->next != NULL && m->next->key == k) {
     if (m->next->next == NULL) { // Vi är på sista elementet
-      temp_value = m->next->value;
+      temp_value = (value_t*)m->next->value;
       free(m->next);
       m->next = NULL;
       m->next = malloc(sizeof(struct map));
     }
     else {
-      temp_value = m->value;
+      temp_value = (value_t*)m->value;
       struct map* temp = m->next;
       m->next = m->next->next;
       free(temp);
@@ -79,7 +80,7 @@ value_t map_remove(struct map* m, key_t k)
     return *temp_value;
   }
   else if(m->next == NULL) // Vi är i slutet och v finns ej
-    return temp_value;
+    return (value_t*)temp_value;
   else // iterera vidare
     return map_remove(m->next, k);
 }
@@ -106,7 +107,10 @@ void map_remove_if(struct map* m,
 
 bool close_helper(key_t k, value_t v, int aux)
 {
-  return filesys_close(v);
+  k++; k--;
+  aux++; aux--;
+  filesys_close(v);
+  return true;
 }
 
 

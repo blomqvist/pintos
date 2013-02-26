@@ -645,6 +645,21 @@
    <Group
       location = "group:lib"
       name = "lib">
+      <FileRef
+         location = "group:arithmetic.c">
+      </FileRef>
+      <FileRef
+         location = "group:ctype.h">
+      </FileRef>
+      <FileRef
+         location = "group:debug.c">
+      </FileRef>
+      <FileRef
+         location = "group:debug.h">
+      </FileRef>
+      <FileRef
+         location = "group:inttypes.h">
+      </FileRef>
       <Group
          location = "group:kernel"
          name = "kernel">
@@ -685,6 +700,51 @@
             location = "group:bitmap.c">
          </FileRef>
       </Group>
+      <FileRef
+         location = "group:limits.h">
+      </FileRef>
+      <FileRef
+         location = "group:random.c">
+      </FileRef>
+      <FileRef
+         location = "group:random.h">
+      </FileRef>
+      <FileRef
+         location = "group:round.h">
+      </FileRef>
+      <FileRef
+         location = "group:stdarg.h">
+      </FileRef>
+      <FileRef
+         location = "group:stdbool.h">
+      </FileRef>
+      <FileRef
+         location = "group:stddef.h">
+      </FileRef>
+      <FileRef
+         location = "group:stdint.h">
+      </FileRef>
+      <FileRef
+         location = "group:stdio.c">
+      </FileRef>
+      <FileRef
+         location = "group:stdio.h">
+      </FileRef>
+      <FileRef
+         location = "group:stdlib.c">
+      </FileRef>
+      <FileRef
+         location = "group:stdlib.h">
+      </FileRef>
+      <FileRef
+         location = "group:string.c">
+      </FileRef>
+      <FileRef
+         location = "group:string.h">
+      </FileRef>
+      <FileRef
+         location = "group:syscall-nr.h">
+      </FileRef>
       <Group
          location = "group:user"
          name = "user">
@@ -710,66 +770,6 @@
             location = "group:stdio.h">
          </FileRef>
       </Group>
-      <FileRef
-         location = "group:string.c">
-      </FileRef>
-      <FileRef
-         location = "group:limits.h">
-      </FileRef>
-      <FileRef
-         location = "group:stdint.h">
-      </FileRef>
-      <FileRef
-         location = "group:string.h">
-      </FileRef>
-      <FileRef
-         location = "group:stdbool.h">
-      </FileRef>
-      <FileRef
-         location = "group:stddef.h">
-      </FileRef>
-      <FileRef
-         location = "group:random.c">
-      </FileRef>
-      <FileRef
-         location = "group:stdlib.c">
-      </FileRef>
-      <FileRef
-         location = "group:stdio.c">
-      </FileRef>
-      <FileRef
-         location = "group:inttypes.h">
-      </FileRef>
-      <FileRef
-         location = "group:random.h">
-      </FileRef>
-      <FileRef
-         location = "group:stdlib.h">
-      </FileRef>
-      <FileRef
-         location = "group:debug.c">
-      </FileRef>
-      <FileRef
-         location = "group:stdio.h">
-      </FileRef>
-      <FileRef
-         location = "group:stdarg.h">
-      </FileRef>
-      <FileRef
-         location = "group:ctype.h">
-      </FileRef>
-      <FileRef
-         location = "group:arithmetic.c">
-      </FileRef>
-      <FileRef
-         location = "group:debug.h">
-      </FileRef>
-      <FileRef
-         location = "group:round.h">
-      </FileRef>
-      <FileRef
-         location = "group:syscall-nr.h">
-      </FileRef>
    </Group>
    <FileRef
       location = "group:LICENSE">
@@ -2190,85 +2190,76 @@
       location = "group:threads"
       name = "threads">
       <FileRef
-         location = "group:init.c">
-      </FileRef>
-      <FileRef
-         location = "group:flags.h">
-      </FileRef>
-      <FileRef
-         location = "group:vaddr.h">
-      </FileRef>
-      <FileRef
-         location = "group:switch.h">
-      </FileRef>
-      <FileRef
-         location = "group:malloc.c">
-      </FileRef>
-      <FileRef
-         location = "group:init.h">
+         location = "group:bochsrc.txt">
       </FileRef>
       <FileRef
          location = "group:boundedbuffer.c">
       </FileRef>
       <FileRef
-         location = "group:loader.h">
-      </FileRef>
-      <FileRef
-         location = "group:malloc.h">
-      </FileRef>
-      <FileRef
-         location = "group:io.h">
+         location = "group:boundedbuffer.h">
       </FileRef>
       <FileRef
          location = "group:copyright.h">
       </FileRef>
       <FileRef
-         location = "group:boundedbuffer.h">
+         location = "group:flags.h">
       </FileRef>
       <FileRef
-         location = "group:synchlist.c">
+         location = "group:init.c">
       </FileRef>
       <FileRef
-         location = "group:bochsrc.txt">
-      </FileRef>
-      <FileRef
-         location = "group:synchlist.h">
-      </FileRef>
-      <FileRef
-         location = "group:intr-stubs.S">
+         location = "group:init.h">
       </FileRef>
       <FileRef
          location = "group:interrupt.c">
       </FileRef>
       <FileRef
-         location = "group:Makefile">
-      </FileRef>
-      <FileRef
-         location = "group:pte.h">
-      </FileRef>
-      <FileRef
          location = "group:interrupt.h">
-      </FileRef>
-      <FileRef
-         location = "group:Make.vars">
-      </FileRef>
-      <FileRef
-         location = "group:thread.c">
-      </FileRef>
-      <FileRef
-         location = "group:palloc.c">
-      </FileRef>
-      <FileRef
-         location = "group:start.S">
       </FileRef>
       <FileRef
          location = "group:intr-stubs.h">
       </FileRef>
       <FileRef
-         location = "group:palloc.h">
+         location = "group:intr-stubs.S">
+      </FileRef>
+      <FileRef
+         location = "group:io.h">
       </FileRef>
       <FileRef
          location = "group:kernel.lds.S">
+      </FileRef>
+      <FileRef
+         location = "group:loader.h">
+      </FileRef>
+      <FileRef
+         location = "group:loader.S">
+      </FileRef>
+      <FileRef
+         location = "group:Make.vars">
+      </FileRef>
+      <FileRef
+         location = "group:Makefile">
+      </FileRef>
+      <FileRef
+         location = "group:malloc.c">
+      </FileRef>
+      <FileRef
+         location = "group:malloc.h">
+      </FileRef>
+      <FileRef
+         location = "group:palloc.c">
+      </FileRef>
+      <FileRef
+         location = "group:palloc.h">
+      </FileRef>
+      <FileRef
+         location = "group:pte.h">
+      </FileRef>
+      <FileRef
+         location = "group:start.S">
+      </FileRef>
+      <FileRef
+         location = "group:switch.h">
       </FileRef>
       <FileRef
          location = "group:switch.S">
@@ -2277,13 +2268,22 @@
          location = "group:synch.c">
       </FileRef>
       <FileRef
-         location = "group:loader.S">
-      </FileRef>
-      <FileRef
          location = "group:synch.h">
       </FileRef>
       <FileRef
+         location = "group:synchlist.c">
+      </FileRef>
+      <FileRef
+         location = "group:synchlist.h">
+      </FileRef>
+      <FileRef
+         location = "group:thread.c">
+      </FileRef>
+      <FileRef
          location = "group:thread.h">
+      </FileRef>
+      <FileRef
+         location = "group:vaddr.h">
       </FileRef>
    </Group>
    <Group
@@ -2772,6 +2772,12 @@
       </FileRef>
       <FileRef
          location = "group:tss.h">
+      </FileRef>
+      <FileRef
+         location = "group:stack_helper.h">
+      </FileRef>
+      <FileRef
+         location = "group:stack_helper.c">
       </FileRef>
    </Group>
    <Group
