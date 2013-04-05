@@ -41,18 +41,22 @@ void process_init(void)
  * from thread_exit - do not call cleanup twice! */
 void process_exit(int status UNUSED)
 {
+  
 }
 
 /* Print a list of all running processes. The list shall include all
  * relevant debug information in a clean, readable format. */
 void process_print_list()
 {
+  
 }
 
 
 struct parameters_to_start_process
 {
   char* command_line;
+  struct semaphore semaphore;
+  bool success;
 };
 
 static void
@@ -75,12 +79,18 @@ process_execute (const char *command_line)
 
   /* LOCAL variable will cease existence when function return! */
   struct parameters_to_start_process arguments;
-
+  
+  /**
+   * Initiate semaphore and aquire resource
+   **/
+  sema_init(&arguments.semaphore, 0);
+  //sema_down(&arguments.semaphore);
+  
   debug("%s#%d: process_execute(\"%s\") ENTERED\n",
         thread_current()->name,
         thread_current()->tid,
         command_line);
-
+   
   /* COPY command line out of parent process memory */
   arguments.command_line = malloc(command_line_size);
   strlcpy(arguments.command_line, command_line, command_line_size);
@@ -91,16 +101,29 @@ process_execute (const char *command_line)
   /* SCHEDULES function `start_process' to run (LATER) */
   thread_id = thread_create (debug_name, PRI_DEFAULT,
                              (thread_func*)start_process, &arguments);
-
   process_id = thread_id;
-
-  /* AVOID bad stuff by turning off. YOU will fix this! */
-  power_off();
   
+  if (process_id == -1)
+  {
+    sema_up(&arguments.semaphore);
+  }
   
-  /* WHICH thread may still be using this right now? */
+  /**
+   * We must make sure that we are able to free command_line
+   * before anyone else uses it again
+   **/
+  sema_down(&arguments.semaphore);
   free(arguments.command_line);
-
+  sema_up(&arguments.semaphore);
+  
+  /**
+   * Check if load i successful
+   **/
+  if (!arguments.success)
+  {
+    process_id = -1;
+  }
+  
   debug("%s#%d: process_execute(\"%s\") RETURNS %d\n",
         thread_current()->name,
         thread_current()->tid,
@@ -115,6 +138,7 @@ process_execute (const char *command_line)
 static void
 start_process (struct parameters_to_start_process* parameters)
 {
+  
   /* The last argument passed to thread_create is received here... */
   struct intr_frame if_;
   bool success;
@@ -133,8 +157,8 @@ start_process (struct parameters_to_start_process* parameters)
   if_.cs = SEL_UCSEG;
   if_.eflags = FLAG_IF | FLAG_MBS;
 
-  success = load (file_name, &if_.eip, &if_.esp);
-
+  success = load(file_name, &if_.eip, &if_.esp);
+  
   debug("%s#%d: start_process(...): load returned %d\n",
         thread_current()->name,
         thread_current()->tid,
@@ -142,11 +166,8 @@ start_process (struct parameters_to_start_process* parameters)
   
   if (success)
   {
-    
     if_.esp = setup_main_stack(parameters->command_line, (void*)PHYS_BASE);
-    
     //dump_stack ( PHYS_BASE + 15, PHYS_BASE - if_.esp + 16 );
-
   }
 
   debug("%s#%d: start_process(\"%s\") DONE\n",
@@ -160,11 +181,24 @@ start_process (struct parameters_to_start_process* parameters)
      - File doeas not exist
      - File do not contain a valid program
      - Not enough memory
-  */
-  if ( ! success )
+   */
+  
+  parameters->success = success;
+  
+  if (!success)
   {
-    thread_exit ();
+    /**
+     * Eftersom thread_exit() byter exekveringstråd måste vi
+     * frigöra semaforen innan bytet (annars fastnar vi)
+     */
+    sema_up(&(parameters->semaphore));
+    thread_exit();
   }
+  
+  /**
+   * Frigör semaforen innan return
+   */
+  sema_up(&(parameters->semaphore));
   
   /* Start the user process by simulating a return from an interrupt,
      implemented by intr_exit (in threads/intr-stubs.S). Because
