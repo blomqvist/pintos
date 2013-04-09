@@ -103,18 +103,17 @@ process_execute (const char *command_line)
                              (thread_func*)start_process, &arguments);
   process_id = thread_id;
   
-  if (process_id == -1)
+  if (process_id != -1)
   {
-    sema_up(&arguments.semaphore);
+    sema_down(&arguments.semaphore);
   }
   
   /**
    * We must make sure that we are able to free command_line
    * before anyone else uses it again
    **/
-  sema_down(&arguments.semaphore);
+  
   free(arguments.command_line);
-  sema_up(&arguments.semaphore);
   
   /**
    * Check if load i successful
