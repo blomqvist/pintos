@@ -15,7 +15,9 @@
 #include "devices/input.h"
 
 /* our own sys call-files */
+#include "userprog/plist.h"
 #include "userprog/sys_file_calls.h"
+#include "userprog/sys_proc_calls.h"
 
 static void syscall_handler (struct intr_frame *);
 
@@ -54,7 +56,7 @@ syscall_handler (struct intr_frame *f)
   {
     case SYS_HALT:
     {
-      printf("SYS_HALT called.\n");      
+      printf("SYS_HALT called.\n");
       power_off(); // power off
     }
     case SYS_EXIT:
@@ -123,6 +125,24 @@ syscall_handler (struct intr_frame *f)
       intr_set_level(INTR_ON);
       f->eax = sys_filesize(esp[1]);
       intr_set_level(intr_lvl);
+      break;
+    }
+    /**
+     * Nedan finns definierade sys_proc_calls.(h|c)
+     **/
+    case SYS_PLIST:
+    {
+      sys_plist();
+      break;
+    }
+    case SYS_SLEEP:
+    {
+      sys_sleep(esp[1]);
+      break;
+    }
+    case SYS_EXEC:
+    {
+      sys_exec((char*)esp[1]);
       break;
     }
     default:

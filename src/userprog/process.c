@@ -32,6 +32,7 @@
  * the process subsystem. */
 void process_init(void)
 {
+  p_map_init(&p_map); // ADDED BY SEBKO Y NIKBLO (gangsta)
 }
 
 /* This function is currently never called. As thread_exit does not

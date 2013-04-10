@@ -1,33 +1,51 @@
 #ifndef _PLIST_H_
 #define _PLIST_H_
 
+#include <stdbool.h>
+#include <stdlib.h>
+#include "threads/synch.h"
 
-/* Place functions to handle a running process here (process list).
-   
-   plist.h : Your function declarations and documentation.
-   plist.c : Your implementation.
+typedef int pid_t;
 
-   The following is strongly recommended:
+/**
+ * Processinfo-struct
+ * wait är mest för debug
+ **/
+struct proc_table
+{
+  bool alive;                 // Lever den
+  bool free;                  // Se om processen är klar
+  bool parent_alive;          // Lever föräldern?
+  pid_t proc_id;              // Process-ID
+  pid_t parent_id;            // Förälder-ID
+  pid_t wait;                 // Vem väntar vi på?
+  int exit_status;            // Exit status
+  struct semaphore semaphore; // Semaphore
+};
 
-   - A function that given process inforamtion (up to you to create)
-     inserts this in a list of running processes and return an integer
-     that can be used to find the information later on.
+typedef unsigned int p_key_t;
+typedef struct proc_table* p_value_t;
 
-   - A function that given an integer (obtained from above function)
-     FIND the process information in the list. Should return some
-     failure code if no process matching the integer is in the list.
-     Or, optionally, several functions to access any information of a
-     particular process that you currently need.
+struct p_map
+{
+  size_t key;
+  p_value_t value;
+  
+  struct p_map* next; // next element
+};
 
-   - A function that given an integer REMOVE the process information
-     from the list. Should only remove the information when no process
-     or thread need it anymore, but must guarantee it is always
-     removed EVENTUALLY.
-     
-   - A function that print the entire content of the list in a nice,
-     clean, readable format.
-     
- */
+void p_map_init(struct p_map* m);
+p_value_t p_map_find(struct p_map* m, p_key_t k);
+p_key_t p_map_insert(struct p_map* m, p_value_t v);
+p_value_t p_map_remove(struct p_map* m, p_key_t k);
+void p_map_for_each(struct p_map* m,
+                  void (*exec)(p_key_t k, p_value_t v, int aux),
+                  int aux);
+void p_map_remove_if(struct p_map* m,
+                   bool (*cond)(p_key_t k, p_value_t v, int aux),
+                   int aux);
 
+/* Initiering av plist map */
+struct p_map p_map;
 
 #endif

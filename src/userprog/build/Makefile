@@ -63,6 +63,7 @@ userprog_SRC += userprog/plist.c	# Process list.
 # Added files
 userprog_SRC += userprog/sys_file_calls.c # SYS_FILE_CALLS
 userprog_SRC += userprog/stack_helper.c   # Stack helper lab 8
+userprog_SRC += userprog/sys_proc_calls.c # Process help functions
 
 # No virtual memory code yet.
 #vm_SRC = vm/file.c			# Some file.
