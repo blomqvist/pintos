@@ -49,9 +49,17 @@ void process_exit(int status UNUSED)
  * relevant debug information in a clean, readable format. */
 void process_print_list()
 {
-  
+  p_map_for_each(&p_map, plist_print_row, 0);
 }
 
+void plist_print_row(p_key_t k, p_value_t v, int aux)
+{
+  ++aux;
+  printf("%d\t%d\t%d\t%d\t%d\t%d\n",
+         v->proc_id, v->parent_id,
+         v->alive, v->exit_status,
+         v->free, k);
+}
 
 struct parameters_to_start_process
 {

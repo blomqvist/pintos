@@ -10,8 +10,7 @@
 
 void sys_plist()
 {
-  printf("Process\tParent\tAlive\tExit\tFree\tT-ID");
-  p_map_for_each(&p_map, plist_print_row, 0);
+  printf("\nProcess\tParent\tAlive\tExit\tFree\tT-ID\n");
 }
 
 void sys_sleep(unsigned millis)
@@ -35,13 +34,4 @@ pid_t sys_exec(char* command_line_arg)
   
   printf("\ZERG LOL: %d\n", p_map.value->proc_id);
   return process_id; // Ändra!
-}
-
-void plist_print_row(p_key_t k, p_value_t v, int aux)
-{
-  ++aux;
-  printf("%d\t\t\t%d\t\t\t%d\t\t%d\t\t%d\t\t%d",
-         v->proc_id, v->parent_id,
-         v->alive, v->exit_status,
-         v->free, k);
 }

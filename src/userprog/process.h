@@ -11,6 +11,9 @@ int process_wait (tid_t);
 void process_cleanup (void);
 void process_activate (void);
 
+// Lab 17
+void plist_print_row(p_key_t k, p_value_t v, int aux);
+
 /* This is unacceptable solutions. */
 #define INFINITE_WAIT() for ( ; ; ) thread_yield()
 #define BUSY_WAIT(n)       \
