@@ -52,13 +52,12 @@ void process_print_list()
   p_map_for_each(&p_map, plist_print_row, 0);
 }
 
-void plist_print_row(p_key_t k, p_value_t v, int aux)
+void plist_print_row(p_key_t k, p_value_t v, int aux UNUSED)
 {
-  ++aux;
-  printf("%d\t%d\t%d\t%d\t%d\t%d\n",
+  printf("%d\t%d\t%s\t%d\t%s\t%d\n",
          v->proc_id, v->parent_id,
-         v->alive, v->exit_status,
-         v->free, k);
+         v->alive ? "True" : "False", v->exit_status,
+         v->free ? "True" : "False", k);
 }
 
 struct parameters_to_start_process
@@ -66,6 +65,7 @@ struct parameters_to_start_process
   char* command_line;
   struct semaphore semaphore;
   bool success;
+  tid_t parent_id;
 };
 
 static void
@@ -93,7 +93,7 @@ process_execute (const char *command_line)
    * Initiate semaphore and aquire resource
    **/
   sema_init(&arguments.semaphore, 0);
-  //sema_down(&arguments.semaphore);
+  arguments.parent_id = thread_current()->tid;
   
   debug("%s#%d: process_execute(\"%s\") ENTERED\n",
         thread_current()->name,
@@ -174,8 +174,18 @@ start_process (struct parameters_to_start_process* parameters)
   
   if (success)
   {
+    struct proc_table* p_table;
+    p_table = malloc(sizeof(struct proc_table));
+    
+    p_table->proc_id = thread_current()->tid;
+    p_table->parent_id = parameters->parent_id;
+    p_table->alive = true;
+    p_table->free  = false;
+    sema_init(&p_table->semaphore, 1);
+    
+    p_map_insert(&p_map, p_table);
+    
     if_.esp = setup_main_stack(parameters->command_line, (void*)PHYS_BASE);
-    //dump_stack ( PHYS_BASE + 15, PHYS_BASE - if_.esp + 16 );
   }
 
   debug("%s#%d: start_process(\"%s\") DONE\n",
