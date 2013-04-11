@@ -34,6 +34,9 @@ struct p_map
   struct p_map* next; // next element
 };
 
+
+struct p_map p_map; // INITIERING KÄN*S GALETS!! HEH :M
+
 void p_map_init(struct p_map* m);
 p_value_t p_map_find(struct p_map* m, p_key_t k);
 p_key_t p_map_insert(struct p_map* m, p_value_t v);

@@ -6,7 +6,7 @@
 // Initializes p_map with known default values
 void p_map_init(struct p_map* m)
 {
-  m->key = 0;
+  m->key = 3;
   m->value = NULL;
   m->next = NULL;
 }

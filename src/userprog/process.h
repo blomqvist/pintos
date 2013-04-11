@@ -2,6 +2,7 @@
 #define USERPROG_PROCESS_H
 
 #include "threads/thread.h"
+#include "userprog/plist.h"
 
 void process_init (void);
 void process_print_list (void);
