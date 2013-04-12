@@ -3,7 +3,7 @@ userprog/load.o: ../../userprog/load.c ../../lib/inttypes.h \
   ../../lib/debug.h ../../lib/stdarg.h ../../lib/stdbool.h \
   ../../lib/stddef.h ../../lib/kernel/stdio.h ../../lib/string.h \
   ../../userprog/process.h ../../threads/thread.h ../../lib/kernel/list.h \
-  ../../userprog/flist.h ../../lib/stdlib.h ../../userprog/load.h \
-  ../../userprog/pagedir.h ../../filesys/file.h ../../filesys/off_t.h \
-  ../../filesys/filesys.h ../../threads/palloc.h ../../threads/vaddr.h \
-  ../../threads/loader.h
+  ../../userprog/flist.h ../../lib/stdlib.h ../../userprog/plist.h \
+  ../../threads/synch.h ../../userprog/load.h ../../userprog/pagedir.h \
+  ../../filesys/file.h ../../filesys/off_t.h ../../filesys/filesys.h \
+  ../../threads/palloc.h ../../threads/vaddr.h ../../threads/loader.h
