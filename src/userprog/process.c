@@ -32,7 +32,7 @@
  * the process subsystem. */
 void process_init(void)
 {
-  p_map_init(&p_map); // ADDED BY SEBKO Y NIKBLO (gangsta)
+  p_map_init(&p_map); // ADDED BY SEBKO Y NIKBLO
 }
 
 /* This function is currently never called. As thread_exit does not
@@ -40,9 +40,23 @@ void process_init(void)
  * instead. Note however that all cleanup after a process must be done
  * in process_cleanup, and that process_cleanup are already called
  * from thread_exit - do not call cleanup twice! */
-void process_exit(int status UNUSED)
+void process_exit(int status)
 {
+  /**
+   * Hämta ut en proc_table* från p_map
+   * och sätt exit_status till status
+   */
   
+  p_map_for_each(&p_map, process_exit_helper, status);
+}
+
+void process_exit_helper(p_key_t k UNUSED, p_value_t v, int aux)
+{
+  if (v->proc_id == thread_current()->tid)
+  {
+    v->exit_status = aux;
+    v->alive = false;
+  }
 }
 
 /* Print a list of all running processes. The list shall include all
@@ -52,12 +66,16 @@ void process_print_list()
   p_map_for_each(&p_map, plist_print_row, 0);
 }
 
-void plist_print_row(p_key_t k, p_value_t v, int aux UNUSED)
+void plist_print_row(p_key_t k UNUSED, p_value_t v, int aux UNUSED)
 {
-  printf("%d\t%d\t%s\t%d\t%s\t%d\n",
-         v->proc_id, v->parent_id,
-         v->alive ? "True" : "False", v->exit_status,
-         v->free ? "True" : "False", k);
+  printf("%d\t%d\t%s\t%d\t%s\t%s\t\t%s\n",
+         v->proc_id,
+         v->parent_id,
+         v->alive ? "yes" : "no",
+         v->exit_status,
+         v->free ? "yes" : "no",
+         v->parent_alive ? "yes" : "no",
+         v->proc_name);
 }
 
 struct parameters_to_start_process
@@ -95,11 +113,13 @@ process_execute (const char *command_line)
   sema_init(&arguments.semaphore, 0);
   arguments.parent_id = thread_current()->tid;
   
+  /*
   debug("%s#%d: process_execute(\"%s\") ENTERED\n",
         thread_current()->name,
         thread_current()->tid,
         command_line);
-   
+  */
+  
   /* COPY command line out of parent process memory */
   arguments.command_line = malloc(command_line_size);
   strlcpy(arguments.command_line, command_line, command_line_size);
@@ -132,11 +152,12 @@ process_execute (const char *command_line)
     process_id = -1;
   }
   
+  /*
   debug("%s#%d: process_execute(\"%s\") RETURNS %d\n",
         thread_current()->name,
         thread_current()->tid,
         command_line, process_id);
-
+  */
   /* MUST be -1 if `load' in `start_process' return false */
   return process_id;
 }
@@ -154,10 +175,12 @@ start_process (struct parameters_to_start_process* parameters)
   char file_name[64];
   strlcpy_first_word (file_name, parameters->command_line, 64);
   
+  /*
   debug("%s#%d: start_process(\"%s\") ENTERED\n",
         thread_current()->name,
         thread_current()->tid,
         parameters->command_line);
+  */
   
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
@@ -167,32 +190,38 @@ start_process (struct parameters_to_start_process* parameters)
 
   success = load(file_name, &if_.eip, &if_.esp);
   
+  /* start process
   debug("%s#%d: start_process(...): load returned %d\n",
         thread_current()->name,
         thread_current()->tid,
         success);
+   */
   
   if (success)
   {
-    struct proc_table* p_table;
-    p_table = malloc(sizeof(struct proc_table));
+    struct proc_table* p_table = malloc(sizeof(struct proc_table));
     
     p_table->proc_id = thread_current()->tid;
     p_table->parent_id = parameters->parent_id;
     p_table->alive = true;
     p_table->free  = false;
+    p_table->parent_alive = true;
+    p_table->proc_name = malloc(16);
+    strlcpy(p_table->proc_name, thread_current()->name, 16);
     sema_init(&p_table->semaphore, 1);
     
     p_map_insert(&p_map, p_table);
     
     if_.esp = setup_main_stack(parameters->command_line, (void*)PHYS_BASE);
+    //dump_stack ( PHYS_BASE + 15, PHYS_BASE - if_.esp + 16 );
   }
 
+  /* bortkommenterattt
   debug("%s#%d: start_process(\"%s\") DONE\n",
         thread_current()->name,
         thread_current()->tid,
         parameters->command_line);
-  
+  */
   
   /* If load fail, quit. Load may fail for several reasons.
      Some simple examples:
@@ -272,13 +301,14 @@ process_cleanup (void)
   
   debug("%s#%d: process_cleanup() ENTERED\n", cur->name, cur->tid);
   
-  /* Later tests DEPEND on this output to work correct. You will have
+  /**
+   * Later tests DEPEND on this output to work correct. You will have
    * to find the actual exit status in your process list. It is
    * important to do this printf BEFORE you tell the parent process
    * that you exit.  (Since the parent may be the main() function,
    * that may sometimes poweroff as soon as process_wait() returns,
    * possibly before the prontf is completed.)
-   */
+   **/
   printf("%s: exit(%d)\n", thread_name(), status);
   
   /* Destroy the current process's page directory and switch back
@@ -296,10 +326,40 @@ process_cleanup (void)
     pagedir_activate (NULL);
     pagedir_destroy (pd);
     map_remove_if(&cur->filemap, close_helper, 0);
+    p_map_remove_if(&p_map, p_map_cleanup, thread_current()->tid);
+    
+    /**
+     * void 
+     * p_map_remove_if(struct p_map* m,
+     * bool (*cond)(p_key_t k, p_value_t v, int aux),
+     * int aux);
+     */
     status = 1;
   }
   debug("%s#%d: process_cleanup() DONE with status %d\n",
         cur->name, cur->tid, status);
+}
+
+/**
+ * p_map_cleanup added in lab 17
+ * for further assistance call 911
+ **/
+bool
+p_map_cleanup(p_key_t k UNUSED, p_value_t v, int aux)
+{  
+  if (v->parent_id == aux) // aux = thread_current()->tid
+  {
+    v->parent_alive = false;
+  }
+  
+  if (!v->parent_alive && !v->alive)
+  {
+    // free malloc from start_process
+    free(v->proc_name);
+    free(v);
+    return true;
+  }
+  return false;
 }
 
 /* Sets up the CPU for running user code in the current

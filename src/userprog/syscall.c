@@ -62,6 +62,7 @@ syscall_handler (struct intr_frame *f)
     case SYS_EXIT:
     {
       printf("SYS_EXIT with status = %d\n", esp[1]);
+      sys_exit(esp[1]);
       thread_exit();
     }
     case SYS_READ:

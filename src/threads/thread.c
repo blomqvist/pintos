@@ -224,11 +224,13 @@ thread_create (const char *name, int priority,
   /* Add to run queue. */
   DEBUG_thread_count_up();
   thread_unblock (t);
-
+  
+  /*
   debug("%s#%d: thread_create(\"%s\", ...) RETURNS %d\n",
         thread_current()->name,
         thread_current()->tid,
         name, tid);
+  */
   return tid;
 }
 

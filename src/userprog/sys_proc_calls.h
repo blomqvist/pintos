@@ -5,6 +5,6 @@
 
 void sys_sleep(unsigned millis);
 void sys_plist(void);
-int sys_exec(char* command_line_arg);
-
+int  sys_exec(char* command_line_arg);
+void sys_exit(int status);
 #endif

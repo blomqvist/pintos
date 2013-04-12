@@ -59,7 +59,7 @@ void* setup_main_stack(const char* command_line, void* stack_top)
   char* ptr_save;
   
   /* calculate the bytes needed to store the command_line */
-  line_size = strlen(command_line);
+  line_size = strlen(command_line) + 1;
   STACK_DEBUG("# line_size = %d\n", line_size);
   
   /* round up to make it even divisible by 4 */

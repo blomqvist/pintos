@@ -21,6 +21,7 @@ struct proc_table
   pid_t wait;                 // Vem väntar vi på?
   int exit_status;            // Exit status
   struct semaphore semaphore; // Semaphore
+  char* proc_name;            // Process name
 };
 
 typedef unsigned int p_key_t;
@@ -40,7 +41,6 @@ struct p_map p_map; // INITIERING KÄN*S GALETS!! HEH :M
 void p_map_init(struct p_map* m);
 p_value_t p_map_find(struct p_map* m, p_key_t k);
 p_key_t p_map_insert(struct p_map* m, p_value_t v);
-p_value_t p_map_remove(struct p_map* m, p_key_t k);
 void p_map_for_each(struct p_map* m,
                   void (*exec)(p_key_t k, p_value_t v, int aux),
                   int aux);

@@ -40,66 +40,63 @@ p_key_t p_map_insert(struct p_map* m, p_value_t v)
   }
 }
 
-p_value_t p_map_remove(struct p_map* m, p_key_t k)
-{
-  p_value_t temp_value = NULL;
-  if(m->key == k) { // v finns i första elementet
-    if (m->next == NULL) {  // första och enda elementet
-      temp_value = m->value;
-      //free(m); // töm m i minnet
-      //m = (void*)malloc(sizeof(struct p_map));
-      p_map_init(m); // ge standardvärden
-    }
-    else { // vi har fler följande element
-      temp_value = m->value;
-      struct p_map* temp = m;
-      m = m->next; // första elementet blir efterföljande element
-      temp = NULL;
-      //p_map_init(m); // frigör (det som var) första elementet
-    }
-    
-    return temp_value;
-  }
-  // [x] -> [n]->key
-  else if(m->next != NULL && m->next->key == k) {
-    if (m->next->next == NULL) { // Vi är på sista elementet
-      temp_value = m->next->value;
-      free(m->next);
-      m->next = NULL;
-      m->next = malloc(sizeof(struct p_map));
-    }
-    else {
-      temp_value = m->value;
-      struct p_map* temp = m->next;
-      m->next = m->next->next;
-      temp = NULL;//free(temp);
-    }
-    return temp_value;
-  }
-  else if(m->next == NULL) // Vi är i slutet och v finns ej
-    return temp_value;
-  else // iterera vidare
-    return p_map_remove(m->next, k);
-}
-
 void p_map_for_each(struct p_map* m,
                   void (*exec)(p_key_t k, p_value_t v, int aux),
                   int aux)
 {
-  exec(m->key, m->value, aux);
-  if (m->next != NULL && m->next->value != NULL)
-    p_map_for_each(m->next, exec, aux);
+  struct p_map* temp = m;
+  while (temp->value != NULL)
+  {
+    exec(temp->key, temp->value, aux);
+    if (temp->next == NULL)
+      break;
+    temp = temp->next;
+  }
 }
 
 void p_map_remove_if(struct p_map* m,
                    bool (*cond)(p_key_t k, p_value_t v, int aux),
                    int aux)
 {
-  if (cond(m->key, m->value, aux)) // removes from p_map
-    p_map_remove(m, m->key);
+  struct p_map* temp = m;
+  struct p_map* temp_free = NULL;
+  /**
+   * Specialfall för första element
+   **/
+  if (cond(m->key, m->value, aux)) // Vi står i första elementet
+  {
+    if (m->next->value == NULL) // Inga efterföljande element
+    {
+      p_map_init(m);
+    }
+    else // Vi har efterföljande element
+    {
+      temp = m;
+      m = m->next;
+      free(temp);
+    }
+    return; // Vi är färdiga
+  }
   
-  if (m->next != NULL && m->next->value != NULL)
-    p_map_remove_if(m->next, cond, aux);
+  while (temp != NULL)
+  {
+    if (cond(temp->next->key, temp->next->value, aux))
+    {
+      /**
+       * [1] -> [2] -> [3]
+       * [1] -> [3]
+       * free([2])
+       **/
+      temp_free = temp->next;
+      temp->next = temp->next->next;
+      free(temp_free); // free([2])
+    }
+    
+    if (temp->next != NULL)
+      return;
+    
+    temp = temp->next;
+  }
 }
 
 

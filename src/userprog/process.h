@@ -14,6 +14,8 @@ void process_activate (void);
 
 // Lab 17
 void plist_print_row(p_key_t k, p_value_t v, int aux);
+void process_exit_helper(p_key_t k, p_value_t v, int aux);
+bool p_map_cleanup(p_key_t k, p_value_t v, int aux);
 
 /* This is unacceptable solutions. */
 #define INFINITE_WAIT() for ( ; ; ) thread_yield()
