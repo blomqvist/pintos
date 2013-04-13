@@ -45,7 +45,7 @@ void p_map_for_each(struct p_map* m,
                   int aux)
 {
   struct p_map* temp = m;
-  while (temp->value != NULL)
+  while (temp != NULL)
   {
     exec(temp->key, temp->value, aux);
     if (temp->next == NULL)
@@ -58,44 +58,30 @@ void p_map_remove_if(struct p_map* m,
                    bool (*cond)(p_key_t k, p_value_t v, int aux),
                    int aux)
 {
-  struct p_map* temp = m;
-  struct p_map* temp_free = NULL;
   /**
-   * Specialfall för första element
+   * 2000 % WORKIN, BITCHES!!
    **/
-  if (cond(m->key, m->value, aux)) // Vi står i första elementet
+  struct p_map* curr = m;
+  struct p_map* prev = NULL;
+  struct p_map* temp = m;
+
+  while (curr != NULL)
   {
-    if (m->next->value == NULL) // Inga efterföljande element
+    if (!cond(curr->key, curr->value, aux))
     {
-      p_map_init(m);
+      prev = curr;
+      curr = curr->next;
     }
-    else // Vi har efterföljande element
+    else
     {
-      temp = m;
-      m = m->next;
-      free(temp);
+      temp = curr->next;
+      
+      if (prev != NULL)
+        prev->next = temp;
+      
+      free (curr);
+      curr = temp;
     }
-    return; // Vi är färdiga
-  }
-  
-  while (temp != NULL)
-  {
-    if (cond(temp->next->key, temp->next->value, aux))
-    {
-      /**
-       * [1] -> [2] -> [3]
-       * [1] -> [3]
-       * free([2])
-       **/
-      temp_free = temp->next;
-      temp->next = temp->next->next;
-      free(temp_free); // free([2])
-    }
-    
-    if (temp->next != NULL)
-      return;
-    
-    temp = temp->next;
   }
 }
 

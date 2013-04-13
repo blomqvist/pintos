@@ -50,12 +50,23 @@ void process_exit(int status)
   p_map_for_each(&p_map, process_exit_helper, status);
 }
 
+/**
+ * Sets alive status to false
+ **/
 void process_exit_helper(p_key_t k UNUSED, p_value_t v, int aux)
 {
+  if (v == NULL)
+    return;
+  
+  if (v->parent_id == thread_current()->tid)
+  {
+    v->parent_alive = false;
+  }
   if (v->proc_id == thread_current()->tid)
   {
     v->exit_status = aux;
     v->alive = false;
+    sema_up(&v->semaphore); // sema_down() i process_wait()
   }
 }
 
@@ -68,15 +79,21 @@ void process_print_list()
 
 void plist_print_row(p_key_t k UNUSED, p_value_t v, int aux UNUSED)
 {
-  printf("%d\t%d\t%s\t%d\t%s\t%s\t\t%s\n",
+  if (v == NULL)
+    return;
+  
+  printf("%d\t%d\t%s\t%d\t%s\t\t%s\n",
          v->proc_id,
          v->parent_id,
          v->alive ? "yes" : "no",
          v->exit_status,
-         v->free ? "yes" : "no",
          v->parent_alive ? "yes" : "no",
          v->proc_name);
 }
+
+/**
+ * Parameters sent to start_process
+ **/
 
 struct parameters_to_start_process
 {
@@ -149,7 +166,7 @@ process_execute (const char *command_line)
    **/
   if (!arguments.success)
   {
-    process_id = -1;
+    process_id = -1; // it was not
   }
   
   /*
@@ -174,13 +191,12 @@ start_process (struct parameters_to_start_process* parameters)
 
   char file_name[64];
   strlcpy_first_word (file_name, parameters->command_line, 64);
-  
-  /*
+
   debug("%s#%d: start_process(\"%s\") ENTERED\n",
         thread_current()->name,
         thread_current()->tid,
         parameters->command_line);
-  */
+  
   
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
@@ -190,13 +206,12 @@ start_process (struct parameters_to_start_process* parameters)
 
   success = load(file_name, &if_.eip, &if_.esp);
   
-  /* start process
+  
   debug("%s#%d: start_process(...): load returned %d\n",
         thread_current()->name,
         thread_current()->tid,
         success);
-   */
-  
+     
   if (success)
   {
     struct proc_table* p_table = malloc(sizeof(struct proc_table));
@@ -204,11 +219,10 @@ start_process (struct parameters_to_start_process* parameters)
     p_table->proc_id = thread_current()->tid;
     p_table->parent_id = parameters->parent_id;
     p_table->alive = true;
-    p_table->free  = false;
     p_table->parent_alive = true;
     p_table->proc_name = malloc(16);
     strlcpy(p_table->proc_name, thread_current()->name, 16);
-    sema_init(&p_table->semaphore, 1);
+    sema_init(&p_table->semaphore, 0);
     
     p_map_insert(&p_map, p_table);
     
@@ -216,12 +230,10 @@ start_process (struct parameters_to_start_process* parameters)
     //dump_stack ( PHYS_BASE + 15, PHYS_BASE - if_.esp + 16 );
   }
 
-  /* bortkommenterattt
   debug("%s#%d: start_process(\"%s\") DONE\n",
         thread_current()->name,
         thread_current()->tid,
         parameters->command_line);
-  */
   
   /* If load fail, quit. Load may fail for several reasons.
      Some simple examples:
@@ -269,14 +281,41 @@ int
 process_wait (int child_id) 
 {
   int status = -1;
-  struct thread *cur = thread_current ();
+  struct thread *cur = thread_current();
+  enum intr_level oldlevel = intr_disable();
 
   debug("%s#%d: process_wait(%d) ENTERED\n",
         cur->name, cur->tid, child_id);
-  /* Yes! You need to do something good here ! */
+
+  struct p_map* temp = &p_map;
+  p_value_t t_curr  = NULL;
+  p_value_t t_child = NULL;
+  
+  // Iterera igenom p_map
+  while (temp->value != NULL)
+  {
+    if (temp->value->proc_id == cur->tid) // Vi har hittat curr_thr
+      t_curr = temp->value;
+    
+    if (temp->value->proc_id == child_id) // Vi har hittat child_thr
+      t_child = temp->value;
+    
+    if (temp->next == NULL)
+      break;
+    temp = temp->next;
+  }
+  
+  if (t_child != NULL)// && t_child->alive)
+  {
+    //t_curr->wait = child_id;  // Ställ att vi väntar (för debug)
+    sema_down(&t_child->semaphore); // Låt om oss vänta på denna tråd.
+    status = t_child->exit_status;
+  }
+  
   debug("%s#%d: process_wait(%d) RETURNS %d\n",
         cur->name, cur->tid, child_id, status);
   
+  intr_set_level(oldlevel);
   return status;
 }
 
@@ -298,6 +337,7 @@ process_cleanup (void)
   struct thread  *cur = thread_current ();
   uint32_t       *pd  = cur->pagedir;
   int status = -1;
+  enum intr_level oldlevel = intr_disable();
   
   debug("%s#%d: process_cleanup() ENTERED\n", cur->name, cur->tid);
   
@@ -309,6 +349,9 @@ process_cleanup (void)
    * that may sometimes poweroff as soon as process_wait() returns,
    * possibly before the prontf is completed.)
    **/
+  map_remove_if(&cur->filemap, close_helper, 0);
+  p_map_remove_if(&p_map, p_map_cleanup, thread_current()->tid);
+  
   printf("%s: exit(%d)\n", thread_name(), status);
   
   /* Destroy the current process's page directory and switch back
@@ -325,8 +368,6 @@ process_cleanup (void)
     cur->pagedir = NULL;
     pagedir_activate (NULL);
     pagedir_destroy (pd);
-    map_remove_if(&cur->filemap, close_helper, 0);
-    p_map_remove_if(&p_map, p_map_cleanup, thread_current()->tid);
     
     /**
      * void 
@@ -338,6 +379,7 @@ process_cleanup (void)
   }
   debug("%s#%d: process_cleanup() DONE with status %d\n",
         cur->name, cur->tid, status);
+  intr_set_level(oldlevel);
 }
 
 /**
@@ -346,7 +388,10 @@ process_cleanup (void)
  **/
 bool
 p_map_cleanup(p_key_t k UNUSED, p_value_t v, int aux)
-{  
+{
+  if (v == NULL)
+    return false;
+  
   if (v->parent_id == aux) // aux = thread_current()->tid
   {
     v->parent_alive = false;
@@ -359,6 +404,19 @@ p_map_cleanup(p_key_t k UNUSED, p_value_t v, int aux)
     free(v);
     return true;
   }
+  
+  /**
+   * Oklar - men pintos måste avslutas innan dom tas bort annars!
+   **/
+  
+  if (!v->alive && v->parent_id == 1)
+  {
+    free(v->proc_name);
+    free(v);
+    return true;
+  }
+  
+  
   return false;
 }
 

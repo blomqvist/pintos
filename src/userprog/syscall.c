@@ -61,7 +61,6 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_EXIT:
     {
-      printf("SYS_EXIT with status = %d\n", esp[1]);
       sys_exit(esp[1]);
       thread_exit();
     }
@@ -131,6 +130,11 @@ syscall_handler (struct intr_frame *f)
     /**
      * Nedan finns definierade sys_proc_calls.(h|c)
      **/
+    case SYS_WAIT:
+    {
+      f->eax = sys_wait(esp[1]);
+      break;
+    }
     case SYS_PLIST:
     {
       sys_plist();
@@ -143,7 +147,7 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_EXEC:
     {
-      sys_exec((char*)esp[1]);
+      f->eax = sys_exec((char*)esp[1]);
       break;
     }
     default:

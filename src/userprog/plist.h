@@ -14,7 +14,6 @@ typedef int pid_t;
 struct proc_table
 {
   bool alive;                 // Lever den
-  bool free;                  // Se om processen är klar
   bool parent_alive;          // Lever föräldern?
   pid_t proc_id;              // Process-ID
   pid_t parent_id;            // Förälder-ID
