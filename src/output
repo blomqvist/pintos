@@ -1,0 +1,760 @@
+gmake: Entering directory `/home/nikbl918/pintos/src/examples'
+gmake: Nothing to be done for `all'.
+gmake: Leaving directory `/home/nikbl918/pintos/src/examples'
+gmake: Entering directory `/home/nikbl918/pintos/src/userprog'
+cd build && gmake all
+gmake[1]: Entering directory `/home/nikbl918/pintos/src/userprog/build'
+i386-elf-gcc -c ../../userprog/process.c -o userprog/process.o -g -msoft-float -O -nostdinc -I../.. -I../../lib -I../../lib/kernel -Wall -W -Wstrict-prototypes -Wmissing-prototypes -Wsystem-headers -DUSERPROG -DFILESYS -MMD -MF userprog/process.d
+i386-elf-ld -T threads/kernel.lds.s -o kernel.o threads/init.o threads/thread.o threads/switch.o threads/interrupt.o threads/intr-stubs.o threads/synch.o threads/palloc.o threads/malloc.o threads/start.o threads/boundedbuffer.o threads/synchlist.o devices/timer.o devices/kbd.o devices/vga.o devices/serial.o devices/disk.o devices/input.o devices/intq.o lib/debug.o lib/random.o lib/stdio.o lib/stdlib.o lib/string.o lib/arithmetic.o lib/kernel/debug.o lib/kernel/list.o lib/kernel/bitmap.o lib/kernel/hash.o lib/kernel/console.o lib/kernel/slist.o userprog/process.o userprog/load.o userprog/pagedir.o userprog/exception.o userprog/syscall.o userprog/gdt.o userprog/tss.o userprog/flist.o userprog/plist.o userprog/sys_file_calls.o userprog/stack_helper.o userprog/sys_proc_calls.o filesys/filesys.o filesys/free-map.o filesys/file.o filesys/directory.o filesys/inode.o filesys/fsutil.o
+i386-elf-objcopy -O binary -R .note -R .comment -S kernel.o kernel.bin.tmp
+dd if=kernel.bin.tmp of=kernel.bin bs=4096 conv=sync
+rm kernel.bin.tmp
+i386-elf-gcc -c ../../threads/loader.S -o threads/loader.o -Wa,--gstabs -nostdinc -I../.. -I../../lib -I../../lib/kernel -DUSERPROG -DFILESYS -DKERNEL_LOAD_PAGES=`perl -e 'print +(-s "kernel.bin") / 4096;'`
+i386-elf-ld -N -e start -Ttext 0x7c00 --oformat binary -o loader.bin threads/loader.o
+cat loader.bin kernel.bin > os.dsk
+gmake[1]: Leaving directory `/home/nikbl918/pintos/src/userprog/build'
+gmake: Leaving directory `/home/nikbl918/pintos/src/userprog'
+Copying ../../examples/longrun into /tmp/GojJrZBoyM.dsk...
+Copying ../../examples/dummy into /tmp/GojJrZBoyM.dsk...
+Writing command line to /tmp/cneBseR8F4.dsk...
+qemu -hda /tmp/cneBseR8F4.dsk -hdb /tmp/kXtH8nkBSt.dsk -hdc /tmp/GojJrZBoyM.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -f -q put longrun put dummy run 'longrun 5 5'
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  7,232,000 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 163 sector (81 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Big Booty Bitches complete.
+Putting 'longrun' into the file system...
+Putting 'dummy' into the file system...
+Executing 'longrun 5 5':
+Will try to start a total of 25 processes in groups of 5
+# main#1: process_wait(3) ENTERED
+
+IN HERE... WAITING.. xD
+# main#1: process_wait(3) RETURNS -1
+Execution of 'longrun 5 5' complete.
+# Preparing to power off...
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+SYS_EXIT with status = 0
+# dummy#4: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#4: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+# dummy#4: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#4: process_cleanup() DONE with status -1
+SYS_EXIT with status = 1
+# dummy#5: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#5: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#5: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#5: process_cleanup() DONE with status -1
+SYS_EXIT with status = 2
+# dummy#6: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#6: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#6: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#6: process_cleanup() DONE with status -1
+SYS_EXIT with status = 3
+# dummy#7: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#7: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#7: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#7: process_cleanup() DONE with status -1
+SYS_EXIT with status = 4
+# dummy#8: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#8: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+# dummy#8: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#8: process_cleanup() DONE with status -1
+SYS_EXIT with status = 5
+# dummy#9: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#9: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#9: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#9: process_cleanup() DONE with status -1
+SYS_EXIT with status = 6
+# dummy#10: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#10: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#10: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#10: process_cleanup() DONE with status -1
+SYS_EXIT with status = 7
+# dummy#11: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#11: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#11: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#11: process_cleanup() DONE with status -1
+SYS_EXIT with status = 8
+# dummy#12: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#12: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#12: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#12: process_cleanup() DONE with status -1
+SYS_EXIT with status = 9
+# dummy#13: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#13: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+# dummy#13: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#13: process_cleanup() DONE with status -1
+SYS_EXIT with status = 10
+# dummy#14: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#14: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#14: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#14: process_cleanup() DONE with status -1
+SYS_EXIT with status = 11
+# dummy#15: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#15: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#15: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#15: process_cleanup() DONE with status -1
+SYS_EXIT with status = 12
+# dummy#16: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#16: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#16: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#16: process_cleanup() DONE with status -1
+SYS_EXIT with status = 13
+# dummy#17: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#17: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#17: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#17: process_cleanup() DONE with status -1
+SYS_EXIT with status = 14
+# dummy#18: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#18: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+# dummy#18: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#18: process_cleanup() DONE with status -1
+SYS_EXIT with status = 15
+# dummy#19: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#19: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#19: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#19: process_cleanup() DONE with status -1
+SYS_EXIT with status = 16
+# dummy#20: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#20: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#20: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#20: process_cleanup() DONE with status -1
+SYS_EXIT with status = 17
+# dummy#21: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#21: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#21: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#21: process_cleanup() DONE with status -1
+SYS_EXIT with status = 18
+# dummy#22: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#22: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#22: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#22: process_cleanup() DONE with status -1
+SYS_EXIT with status = 19
+# dummy#23: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#23: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+23	3	no	19	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+# dummy#23: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#23: process_cleanup() DONE with status -1
+SYS_EXIT with status = 20
+# dummy#24: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#24: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+23	3	no	19	yes		dummy
+24	3	no	20	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#24: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#24: process_cleanup() DONE with status -1
+SYS_EXIT with status = 21
+# dummy#25: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#25: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+23	3	no	19	yes		dummy
+24	3	no	20	yes		dummy
+25	3	no	21	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#25: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#25: process_cleanup() DONE with status -1
+SYS_EXIT with status = 22
+# dummy#26: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#26: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+23	3	no	19	yes		dummy
+24	3	no	20	yes		dummy
+25	3	no	21	yes		dummy
+26	3	no	22	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#26: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#26: process_cleanup() DONE with status -1
+SYS_EXIT with status = 23
+# dummy#27: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#27: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+23	3	no	19	yes		dummy
+24	3	no	20	yes		dummy
+25	3	no	21	yes		dummy
+26	3	no	22	yes		dummy
+27	3	no	23	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# dummy#27: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#27: process_cleanup() DONE with status -1
+SYS_EXIT with status = 24
+# dummy#28: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#28: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	yes	0	yes		longrun
+4	3	no	0	yes		dummy
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+23	3	no	19	yes		dummy
+24	3	no	20	yes		dummy
+25	3	no	21	yes		dummy
+26	3	no	22	yes		dummy
+27	3	no	23	yes		dummy
+28	3	no	24	yes		dummy
+ERROR: Main thread about to poweroff with 3 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+
+IM HERE... SLEEPING AND STUFF
+SYS_EXIT with status = 0
+# longrun#3: process_cleanup() ENTERED
+longrun: exit(-1)
+# dummy#28: process_cleanup() ENTERED
+dummy: exit(-1)
+# dummy#28: process_cleanup() DONE with status -1
+# longrun#3: process_cleanup() DONE with status 1
+
+Process	Parent	Alive	Exit	Free	Parent Alive	Name
+3	1	no	0	yes		longrun
+5	3	no	1	yes		dummy
+6	3	no	2	yes		dummy
+7	3	no	3	yes		dummy
+8	3	no	4	yes		dummy
+9	3	no	5	yes		dummy
+10	3	no	6	yes		dummy
+11	3	no	7	yes		dummy
+12	3	no	8	yes		dummy
+13	3	no	9	yes		dummy
+14	3	no	10	yes		dummy
+15	3	no	11	yes		dummy
+16	3	no	12	yes		dummy
+17	3	no	13	yes		dummy
+18	3	no	14	yes		dummy
+19	3	no	15	yes		dummy
+20	3	no	16	yes		dummy
+21	3	no	17	yes		dummy
+22	3	no	18	yes		dummy
+23	3	no	19	yes		dummy
+24	3	no	20	yes		dummy
+25	3	no	21	yes		dummy
+26	3	no	22	yes		dummy
+27	3	no	23	yes		dummy
+28	3	no	24	yes		dummy
+ERROR: Main thread about to poweroff with 2 other threads still running!
+ERROR: Check your implementation of process_execute() and process_wait().
+# longrun#3: process_cleanup() ENTERED
+longrun: exit(-1)
+# longrun#3: process_cleanup() DONE with status -1
+Timer: 327 ticks
+Thread: 0 idle ticks, 271 kernel ticks, 57 user ticks
+hd0:0: 0 reads, 0 writes
+hd0:1: 681 reads, 336 writes
+hd1:0: 163 reads, 0 writes
+Console: 20843 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...

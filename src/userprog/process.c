@@ -352,6 +352,18 @@ process_cleanup (void)
   map_remove_if(&cur->filemap, close_helper, 0);
   p_map_remove_if(&p_map, p_map_cleanup, thread_current()->tid);
   
+  struct p_map* temp = &p_map;
+  while (temp != NULL)
+  {
+    p_value_t v = temp->value;
+    if (v->proc_id == thread_current()->tid)
+    {
+      status = v->exit_status;
+      break;
+    }
+    temp = temp->next;
+  }
+  
   printf("%s: exit(%d)\n", thread_name(), status);
   
   /* Destroy the current process's page directory and switch back

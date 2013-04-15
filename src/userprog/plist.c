@@ -23,6 +23,29 @@ p_value_t p_map_find(struct p_map* m, p_key_t k)
 
 p_key_t p_map_insert(struct p_map* m, p_value_t v)
 {
+  struct p_map* temp = m;
+  for (;;)
+  {
+    if (temp->value == NULL && temp->next == NULL)
+    {
+      temp->value = v;
+      
+      // Allokera minne för nästa objekt
+      temp->next = (void*)malloc(sizeof(struct p_map));
+      p_map_init(temp->next);
+      temp->next->key = temp->key + 1;
+      
+      // Returnera index
+      return temp->key;
+    }
+    else
+    {
+      // Stega vidare
+      temp = temp->next;
+    }
+  }
+  /**
+   * Old map_insert
   if(m->value == NULL && m->next == NULL) { // Vi är sist i p_map:en
     m->value = v;
     
@@ -38,6 +61,7 @@ p_key_t p_map_insert(struct p_map* m, p_value_t v)
     // Vi är inte sist i listan, stega tills vi kommer dit
     return p_map_insert(m->next, v);
   }
+  **/
 }
 
 void p_map_for_each(struct p_map* m,
@@ -74,11 +98,12 @@ void p_map_remove_if(struct p_map* m,
     }
     else
     {
-      temp = curr->next;
+      if (curr->next != NULL)
+        temp = curr->next;
       
       if (prev != NULL)
         prev->next = temp;
-      
+  
       free (curr);
       curr = temp;
     }

@@ -30,7 +30,7 @@ void sys_exit(int status)
 {
   process_exit(status);
   process_cleanup();
-  sys_plist();
+  //sys_plist();
 }
 
 int
