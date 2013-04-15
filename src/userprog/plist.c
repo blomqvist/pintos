@@ -83,7 +83,7 @@ void p_map_remove_if(struct p_map* m,
                    int aux)
 {
   /**
-   * 2000 % WORKIN, BITCHES!!
+   * 2001 % WORKIN, BITCHES!!
    **/
   struct p_map* curr = m;
   struct p_map* prev = NULL;
@@ -104,8 +104,13 @@ void p_map_remove_if(struct p_map* m,
       if (prev != NULL)
         prev->next = temp;
   
-      free (curr);
-      curr = temp;
+      if (curr != m)
+      {
+        free (curr);
+        curr = temp;
+      }
+      else
+        p_map_init(m);
     }
   }
 }

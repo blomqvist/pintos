@@ -62,11 +62,10 @@ void process_exit_helper(p_key_t k UNUSED, p_value_t v, int aux)
   {
     v->parent_alive = false;
   }
+  
   if (v->proc_id == thread_current()->tid)
   {
     v->exit_status = aux;
-    v->alive = false;
-    sema_up(&v->semaphore); // sema_down() i process_wait()
   }
 }
 
@@ -169,12 +168,11 @@ process_execute (const char *command_line)
     process_id = -1; // it was not
   }
   
-  /*
   debug("%s#%d: process_execute(\"%s\") RETURNS %d\n",
         thread_current()->name,
         thread_current()->tid,
         command_line, process_id);
-  */
+
   /* MUST be -1 if `load' in `start_process' return false */
   return process_id;
 }
@@ -250,14 +248,14 @@ start_process (struct parameters_to_start_process* parameters)
      * Eftersom thread_exit() byter exekveringstråd måste vi
      * frigöra semaforen innan bytet (annars fastnar vi)
      */
-    sema_up(&(parameters->semaphore));
+    sema_up(&parameters->semaphore);
     thread_exit();
   }
   
   /**
    * Frigör semaforen innan return
    */
-  sema_up(&(parameters->semaphore));
+  sema_up(&parameters->semaphore);
   
   /* Start the user process by simulating a return from an interrupt,
      implemented by intr_exit (in threads/intr-stubs.S). Because
@@ -282,7 +280,6 @@ process_wait (int child_id)
 {
   int status = -1;
   struct thread *cur = thread_current();
-  enum intr_level oldlevel = intr_disable();
 
   debug("%s#%d: process_wait(%d) ENTERED\n",
         cur->name, cur->tid, child_id);
@@ -292,12 +289,12 @@ process_wait (int child_id)
   p_value_t t_child = NULL;
   
   // Iterera igenom p_map
-  while (temp->value != NULL)
+  for (;;)
   {
-    if (temp->value->proc_id == cur->tid) // Vi har hittat curr_thr
+    if (temp->value != NULL && temp->value->proc_id == cur->tid) // Vi har hittat curr_thr
       t_curr = temp->value;
     
-    if (temp->value->proc_id == child_id) // Vi har hittat child_thr
+    if (temp->value != NULL && temp->value->proc_id == child_id) // Vi har hittat child_thr
       t_child = temp->value;
     
     if (temp->next == NULL)
@@ -305,17 +302,16 @@ process_wait (int child_id)
     temp = temp->next;
   }
   
-  if (t_child != NULL)// && t_child->alive)
+  if (t_child != NULL)//&& t_child->alive)
   {
     //t_curr->wait = child_id;  // Ställ att vi väntar (för debug)
-    sema_down(&t_child->semaphore); // Låt om oss vänta på denna tråd.
+    if (t_child->alive)
+      sema_down(&t_child->semaphore); // Låt om oss vänta på denna tråd.
     status = t_child->exit_status;
   }
   
   debug("%s#%d: process_wait(%d) RETURNS %d\n",
         cur->name, cur->tid, child_id, status);
-  
-  intr_set_level(oldlevel);
   return status;
 }
 
@@ -337,7 +333,6 @@ process_cleanup (void)
   struct thread  *cur = thread_current ();
   uint32_t       *pd  = cur->pagedir;
   int status = -1;
-  enum intr_level oldlevel = intr_disable();
   
   debug("%s#%d: process_cleanup() ENTERED\n", cur->name, cur->tid);
   
@@ -349,20 +344,23 @@ process_cleanup (void)
    * that may sometimes poweroff as soon as process_wait() returns,
    * possibly before the prontf is completed.)
    **/
-  map_remove_if(&cur->filemap, close_helper, 0);
-  p_map_remove_if(&p_map, p_map_cleanup, thread_current()->tid);
   
   struct p_map* temp = &p_map;
   while (temp != NULL)
   {
     p_value_t v = temp->value;
-    if (v->proc_id == thread_current()->tid)
+    if (v != NULL && v->proc_id == thread_current()->tid)
     {
+      v->alive = false;
       status = v->exit_status;
+      sema_up(&v->semaphore); // sema_down() i process_wait()
       break;
     }
     temp = temp->next;
   }
+  
+  map_remove_if(&cur->filemap, close_helper, 0);
+  p_map_remove_if(&p_map, p_map_cleanup, thread_current()->tid);
   
   printf("%s: exit(%d)\n", thread_name(), status);
   
@@ -381,17 +379,10 @@ process_cleanup (void)
     pagedir_activate (NULL);
     pagedir_destroy (pd);
     
-    /**
-     * void 
-     * p_map_remove_if(struct p_map* m,
-     * bool (*cond)(p_key_t k, p_value_t v, int aux),
-     * int aux);
-     */
     status = 1;
   }
   debug("%s#%d: process_cleanup() DONE with status %d\n",
         cur->name, cur->tid, status);
-  intr_set_level(oldlevel);
 }
 
 /**
@@ -416,18 +407,6 @@ p_map_cleanup(p_key_t k UNUSED, p_value_t v, int aux)
     free(v);
     return true;
   }
-  
-  /**
-   * Oklar - men pintos måste avslutas innan dom tas bort annars!
-   **/
-  
-  if (!v->alive && v->parent_id == 1)
-  {
-    free(v->proc_name);
-    free(v);
-    return true;
-  }
-  
   
   return false;
 }
