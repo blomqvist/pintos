@@ -29,8 +29,6 @@ pid_t sys_exec(char* command_line_arg)
 void sys_exit(int status)
 {
   process_exit(status);
-  //process_cleanup();
-  //sys_plist();
 }
 
 int

@@ -285,15 +285,11 @@ process_wait (int child_id)
         cur->name, cur->tid, child_id);
 
   struct p_map* temp = &p_map;
-  p_value_t t_curr  = NULL;
   p_value_t t_child = NULL;
   
   // Iterera igenom p_map
   for (;;)
   {
-    if (temp->value != NULL && temp->value->proc_id == cur->tid) // Vi har hittat curr_thr
-      t_curr = temp->value;
-    
     if (temp->value != NULL && temp->value->proc_id == child_id) // Vi har hittat child_thr
       t_child = temp->value;
     
