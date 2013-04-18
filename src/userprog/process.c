@@ -129,12 +129,12 @@ process_execute (const char *command_line)
   sema_init(&arguments.semaphore, 0);
   arguments.parent_id = thread_current()->tid;
   
-  /*
+  
   debug("%s#%d: process_execute(\"%s\") ENTERED\n",
         thread_current()->name,
         thread_current()->tid,
         command_line);
-  */
+  
   
   /* COPY command line out of parent process memory */
   arguments.command_line = malloc(command_line_size);

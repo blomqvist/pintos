@@ -1,0 +1,40 @@
+Copying tests/userprog/open-twice into /tmp/olhM0bduYv.dsk...
+Copying ../../tests/userprog/sample.txt into /tmp/olhM0bduYv.dsk...
+Writing command line to /tmp/SNGvXBG6x6.dsk...
+qemu -hda /tmp/SNGvXBG6x6.dsk -hdb /tmp/oiw6e6omhJ.dsk -hdc /tmp/olhM0bduYv.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put open-twice put sample.txt run open-twice
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  3,273,600 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 91 sector (45 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'open-twice' into the file system...
+Putting 'sample.txt' into the file system...
+Executing 'open-twice':
+# main#1: process_execute("open-twice") ENTERED
+# open-twice#3: start_process("open-twice") ENTERED
+# open-twice#3: start_process(...): load returned 1
+# open-twice#3: start_process("open-twice") DONE
+(open-twice) begin
+(open-twice) open "sample.txt" once
+(open-twice) open "sample.txt" again
+(open-twice) end
+# open-twice#3: process_cleanup() ENTERED
+# main#1: process_execute("open-twice") RETURNS 3
+# main#1: process_wait(3) ENTERED
+# main#1: process_wait(3) RETURNS 0
+Execution of 'open-twice' complete.
+# Preparing to power off...
+Timer: 79 ticks
+Thread: 0 idle ticks, 73 kernel ticks, 7 user ticks
+hd0:0: 0 reads, 0 writes
+hd0:1: 96 reads, 192 writes
+hd1:0: 91 reads, 0 writes
+Console: 1305 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...

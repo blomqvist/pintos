@@ -1,0 +1,74 @@
+Copying tests/userprog/exec-multiple into /tmp/k3BdiSIXYh.dsk...
+Copying tests/userprog/child-simple into /tmp/k3BdiSIXYh.dsk...
+Writing command line to /tmp/qYmGQBhaEK.dsk...
+qemu -hda /tmp/qYmGQBhaEK.dsk -hdb /tmp/IyGSkPXd5V.dsk -hdc /tmp/k3BdiSIXYh.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put exec-multiple put child-simple run exec-multiple
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  6,547,200 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 177 sector (88 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'exec-multiple' into the file system...
+Putting 'child-simple' into the file system...
+Executing 'exec-multiple':
+# main#1: process_execute("exec-multiple") ENTERED
+# exec-multiple#3: start_process("exec-multiple") ENTERED
+# exec-multiple#3: start_process(...): load returned 1
+# exec-multiple#3: start_process("exec-multiple") DONE
+(exec-multiple) begin
+# exec-multiple#3: process_execute("child-simple") ENTERED
+# main#1: process_execute("exec-multiple") RETURNS 3
+# main#1: process_wait(3) ENTERED
+# child-simple#4: start_process("child-simple") ENTERED
+# child-simple#4: start_process(...): load returned 1
+# child-simple#4: start_process("child-simple") DONE
+(child-simple) run
+# child-simple#4: process_cleanup() ENTERED
+# exec-multiple#3: process_execute("child-simple") RETURNS 4
+# exec-multiple#3: process_wait(4) ENTERED
+# exec-multiple#3: process_wait(4) RETURNS 81
+# exec-multiple#3: process_execute("child-simple") ENTERED
+# child-simple#5: start_process("child-simple") ENTERED
+# child-simple#5: start_process(...): load returned 1
+# child-simple#5: start_process("child-simple") DONE
+(child-simple) run
+# child-simple#5: process_cleanup() ENTERED
+# exec-multiple#3: process_execute("child-simple") RETURNS 5
+# exec-multiple#3: process_wait(5) ENTERED
+# exec-multiple#3: process_wait(5) RETURNS 81
+# exec-multiple#3: process_execute("child-simple") ENTERED
+# child-simple#6: start_process("child-simple") ENTERED
+# child-simple#6: start_process(...): load returned 1
+# child-simple#6: start_process("child-simple") DONE
+(child-simple) run
+# child-simple#6: process_cleanup() ENTERED
+# exec-multiple#3: process_execute("child-simple") RETURNS 6
+# exec-multiple#3: process_wait(6) ENTERED
+# exec-multiple#3: process_wait(6) RETURNS 81
+# exec-multiple#3: process_execute("child-simple") ENTERED
+# child-simple#7: start_process("child-simple") ENTERED
+# child-simple#7: start_process(...): load returned 1
+# child-simple#7: start_process("child-simple") DONE
+(child-simple) run
+# child-simple#7: process_cleanup() ENTERED
+# exec-multiple#3: process_execute("child-simple") RETURNS 7
+# exec-multiple#3: process_wait(7) ENTERED
+# exec-multiple#3: process_wait(7) RETURNS 81
+(exec-multiple) end
+# exec-multiple#3: process_cleanup() ENTERED
+# main#1: process_wait(3) RETURNS 0
+Execution of 'exec-multiple' complete.
+# Preparing to power off...
+Timer: 172 ticks
+Thread: 0 idle ticks, 68 kernel ticks, 125 user ticks
+hd0:0: 0 reads, 0 writes
+hd0:1: 198 reads, 364 writes
+hd1:0: 177 reads, 0 writes
+Console: 3027 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...

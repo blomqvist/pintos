@@ -44,24 +44,6 @@ p_key_t p_map_insert(struct p_map* m, p_value_t v)
       temp = temp->next;
     }
   }
-  /**
-   * Old map_insert
-  if(m->value == NULL && m->next == NULL) { // Vi är sist i p_map:en
-    m->value = v;
-    
-    // Allokera minne för nästa objekt i p_map:en
-    m->next = (void*)malloc(sizeof(struct p_map));
-    p_map_init(m->next);
-    m->next->key = m->key + 1;
-    
-    return m->key;
-    // Returnera nuvarande index
-  }
-  else {
-    // Vi är inte sist i listan, stega tills vi kommer dit
-    return p_map_insert(m->next, v);
-  }
-  **/
 }
 
 void p_map_for_each(struct p_map* m,

@@ -125,8 +125,6 @@ int sys_write(int fd, const void* buffer, unsigned length)
 
 bool sys_create(const char* file, unsigned initial_size)
 {
-  printf("\nFile name: %s\n", file);
-  printf("Initial size: %d\n\n", initial_size);
   if (filesys_create(file, initial_size) && initial_size > 0)
   {
     map_insert(get_filemap(), filesys_open(file));

@@ -15,11 +15,6 @@ struct map
   struct map* next; // next element
 };
 
-struct map_list
-{
-  struct map* node;
-};
-
 void map_init(struct map* m);
 value_t map_find(struct map* m, key_t k);
 key_t map_insert(struct map* m, value_t v);
@@ -31,6 +26,6 @@ void map_remove_if(struct map* m,
                    bool (*cond)(key_t k, value_t v, int aux),
                    int aux);
 
-bool close_helper(key_t k, value_t v, int aux);
+bool close_helper(key_t k UNUSED, value_t v, int aux UNUSED);
 
 #endif

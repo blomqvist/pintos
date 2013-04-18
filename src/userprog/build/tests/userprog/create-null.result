@@ -1,0 +1,2 @@
+FAIL
+Kernel panic in run: PANIC at ../../filesys/directory.c:149 in dir_add(): assertion `name != NULL' failed.

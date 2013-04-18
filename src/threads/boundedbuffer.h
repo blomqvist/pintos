@@ -12,6 +12,13 @@
 
 struct bounded_buffer {
   int size;
+  /**
+  * Nedan från föreläsningsanteckningar
+  **/
+  //byte rpos, wpos = 0;
+  //struct semaphore free = SIZE;
+  //struct sempahore filled = 0;
+  //struct lock buffer_mutex;
   // You may add other data fields required for the bounded buffer
 
 };

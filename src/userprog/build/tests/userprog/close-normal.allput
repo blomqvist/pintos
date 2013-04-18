@@ -1,0 +1,26 @@
+Copying tests/userprog/close-normal into /tmp/CbzOxcnF3k.dsk...
+Copying ../../tests/userprog/sample.txt into /tmp/CbzOxcnF3k.dsk...
+Writing command line to /tmp/RAW2xwqW6i.dsk...
+qemu -hda /tmp/RAW2xwqW6i.dsk -hdb /tmp/bGEoXTiOn6.dsk -hdc /tmp/CbzOxcnF3k.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put close-normal put sample.txt run close-normal
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  9,292,800 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 91 sector (45 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'close-normal' into the file system...
+Putting 'sample.txt' into the file system...
+Executing 'close-normal':
+# main#1: process_execute("close-normal") ENTERED
+# close-normal#3: start_process("close-normal") ENTERED
+# close-normal#3: start_process(...): load returned 1
+# close-normal#3: start_process("close-normal") DONE
+(close-normal) begin
+(close-normal) open "sample.txt"
+(close-normal) close "sample.txt"
+# main#1: process_execute("close-normal") RETURNS 3
+# main#1: process_wait(3) ENTERED

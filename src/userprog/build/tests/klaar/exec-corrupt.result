@@ -1,0 +1,54 @@
+FAIL
+Test output failed to match any acceptable form.
+
+Acceptable output:
+  (exec-corrupt) begin
+  load: corrupt-elf: error loading executable
+  (exec-corrupt) exec("corrupt-elf"): -1
+  corrupt-elf: exit(-1)
+  (exec-corrupt) end
+  exec-corrupt: exit(0)
+Differences in `diff -u' format:
+  (exec-corrupt) begin
+  load: corrupt-elf: error loading executable
+  (exec-corrupt) exec("corrupt-elf"): -1
+- corrupt-elf: exit(-1)
+  (exec-corrupt) end
+- exec-corrupt: exit(0)
+Acceptable output:
+  (exec-corrupt) begin
+  load: corrupt-elf: error loading executable
+  (exec-corrupt) exec("corrupt-elf"): -1
+  (exec-corrupt) end
+  exec-corrupt: exit(0)
+Differences in `diff -u' format:
+  (exec-corrupt) begin
+  load: corrupt-elf: error loading executable
+  (exec-corrupt) exec("corrupt-elf"): -1
+  (exec-corrupt) end
+- exec-corrupt: exit(0)
+Acceptable output:
+  (exec-corrupt) begin
+  load: corrupt-elf: error loading executable
+  corrupt-elf: exit(-1)
+  (exec-corrupt) exec("corrupt-elf"): -1
+  (exec-corrupt) end
+  exec-corrupt: exit(0)
+Differences in `diff -u' format:
+  (exec-corrupt) begin
+  load: corrupt-elf: error loading executable
+- corrupt-elf: exit(-1)
+  (exec-corrupt) exec("corrupt-elf"): -1
+  (exec-corrupt) end
+- exec-corrupt: exit(0)
+Acceptable output:
+  (exec-corrupt) begin
+  (exec-corrupt) exec("corrupt-elf"): -1
+  (exec-corrupt) end
+  exec-corrupt: exit(0)
+Differences in `diff -u' format:
+  (exec-corrupt) begin
++ load: corrupt-elf: error loading executable
+  (exec-corrupt) exec("corrupt-elf"): -1
+  (exec-corrupt) end
+- exec-corrupt: exit(0)

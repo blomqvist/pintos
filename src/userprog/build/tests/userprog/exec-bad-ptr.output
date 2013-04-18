@@ -1,0 +1,38 @@
+Copying tests/userprog/exec-bad-ptr into /tmp/VMnF0QMMUe.dsk...
+Writing command line to /tmp/HXDAfwfMcV.dsk...
+qemu -hda /tmp/HXDAfwfMcV.dsk -hdb /tmp/i2N2fo1Vnu.dsk -hdc /tmp/VMnF0QMMUe.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put exec-bad-ptr run exec-bad-ptr
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  6,380,800 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'exec-bad-ptr' into the file system...
+Executing 'exec-bad-ptr':
+(exec-bad-ptr) begin
+Page fault at 0x20101234: not present error reading page in kernel context.
+Interrupt 0x0e (#PF Page-Fault Exception) at eip=0xc0108405
+ cr2=20101234 error=00000000
+ eax=00000000 ebx=bfffff60 ecx=ffffffff edx=0000000e
+ esi=20101234 edi=20101234 esp=c0119ee4 ebp=c0119f34
+ cs=0008 ds=0010 es=0010 ss=23f4
+Kernel PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
+backtrace  0xc01065dc 0xc010961a 0xc01096c5 0xc010156d 0xc01016d3 0xc0108405 0xc010a27c 0xc0109851 0xc010156d 0xc01016d3 0x8049ab9 0x8048084 0x80480b9 0x8048595.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Simply copy-paste the backtrace command line above.
+They will not get the chance to complete.
+Timer: 77 ticks
+Thread: 0 idle ticks, 65 kernel ticks, 12 user ticks
+hd0:0: 0 reads, 0 writes
+hd0:1: 55 reads, 186 writes
+hd1:0: 89 reads, 0 writes
+Console: 1861 characters output
+Keyboard: 0 keys pressed
+Exception: 1 page faults
+Powering off...

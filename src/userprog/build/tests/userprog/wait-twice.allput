@@ -1,0 +1,51 @@
+Copying tests/userprog/wait-twice into /tmp/UjEp0tGaXf.dsk...
+Copying tests/userprog/child-simple into /tmp/UjEp0tGaXf.dsk...
+Writing command line to /tmp/zLXHOpOzUj.dsk...
+qemu -hda /tmp/zLXHOpOzUj.dsk -hdb /tmp/QvnknY0pZu.dsk -hdc /tmp/UjEp0tGaXf.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put wait-twice put child-simple run wait-twice
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  6,547,200 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 177 sector (88 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'wait-twice' into the file system...
+Putting 'child-simple' into the file system...
+Executing 'wait-twice':
+# main#1: process_execute("wait-twice") ENTERED
+# wait-twice#3: start_process("wait-twice") ENTERED
+# wait-twice#3: start_process(...): load returned 1
+# wait-twice#3: start_process("wait-twice") DONE
+(wait-twice) begin
+# wait-twice#3: process_execute("child-simple") ENTERED
+# main#1: process_execute("wait-twice") RETURNS 3
+# main#1: process_wait(3) ENTERED
+# child-simple#4: start_process("child-simple") ENTERED
+# child-simple#4: start_process(...): load returned 1
+# child-simple#4: start_process("child-simple") DONE
+(child-simple) run
+# child-simple#4: process_cleanup() ENTERED
+# wait-twice#3: process_execute("child-simple") RETURNS 4
+# wait-twice#3: process_wait(4) ENTERED
+# wait-twice#3: process_wait(4) RETURNS 81
+(wait-twice) wait(exec()) = 81
+# wait-twice#3: process_wait(4) ENTERED
+# wait-twice#3: process_wait(4) RETURNS 81
+(wait-twice) wait(exec()) = 81
+(wait-twice) end
+# wait-twice#3: process_cleanup() ENTERED
+# main#1: process_wait(3) RETURNS 0
+Execution of 'wait-twice' complete.
+# Preparing to power off...
+Timer: 79 ticks
+Thread: 0 idle ticks, 64 kernel ticks, 15 user ticks
+hd0:0: 0 reads, 0 writes
+hd0:1: 111 reads, 364 writes
+hd1:0: 177 reads, 0 writes
+Console: 1808 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...

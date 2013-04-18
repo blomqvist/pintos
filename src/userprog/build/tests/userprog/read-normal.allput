@@ -1,0 +1,27 @@
+Copying tests/userprog/read-normal into /tmp/yn4uVnkxps.dsk...
+Copying ../../tests/userprog/sample.txt into /tmp/yn4uVnkxps.dsk...
+Writing command line to /tmp/gXiZnOAdZJ.dsk...
+qemu -hda /tmp/gXiZnOAdZJ.dsk -hdb /tmp/BlZb6EL4QV.dsk -hdc /tmp/yn4uVnkxps.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put read-normal put sample.txt run read-normal
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  6,822,400 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 92 sector (46 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'read-normal' into the file system...
+Putting 'sample.txt' into the file system...
+Executing 'read-normal':
+# main#1: process_execute("read-normal") ENTERED
+# read-normal#3: start_process("read-normal") ENTERED
+# read-normal#3: start_process(...): load returned 1
+# read-normal#3: start_process("read-normal") DONE
+(read-normal) begin
+(read-normal) open "sample.txt" for verification
+(read-normal) verified contents of "sample.txt"
+(read-normal) close "sample.txt"
+# main#1: process_execute("read-normal") RETURNS 3
+# main#1: process_wait(3) ENTERED

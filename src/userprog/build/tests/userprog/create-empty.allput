@@ -1,0 +1,37 @@
+Copying tests/userprog/create-empty into /tmp/FyuN9BmTHZ.dsk...
+Writing command line to /tmp/44PSS3i9kb.dsk...
+qemu -hda /tmp/44PSS3i9kb.dsk -hdb /tmp/FuY8WX9TEO.dsk -hdc /tmp/FyuN9BmTHZ.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put create-empty run create-empty
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  1,636,800 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'create-empty' into the file system...
+Executing 'create-empty':
+# main#1: process_execute("create-empty") ENTERED
+# create-empty#3: start_process("create-empty") ENTERED
+# create-empty#3: start_process(...): load returned 1
+# create-empty#3: start_process("create-empty") DONE
+(create-empty) begin
+(create-empty) create(""): 0
+(create-empty) end
+# create-empty#3: process_cleanup() ENTERED
+# main#1: process_execute("create-empty") RETURNS 3
+# main#1: process_wait(3) ENTERED
+# main#1: process_wait(3) RETURNS 0
+Execution of 'create-empty' complete.
+# Preparing to power off...
+Timer: 76 ticks
+Thread: 0 idle ticks, 65 kernel ticks, 11 user ticks
+hd0:0: 0 reads, 0 writes
+hd0:1: 59 reads, 190 writes
+hd1:0: 89 reads, 0 writes
+Console: 1232 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...

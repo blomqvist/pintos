@@ -120,7 +120,7 @@ main (void)
   filesys_init (format_filesys);
 #endif
 
-  printf ("Big Booty Bitches complete.\n");
+  printf ("Boot complete.\n");
   
   /* Run actions specified on kernel command line. */
   run_actions (argv);

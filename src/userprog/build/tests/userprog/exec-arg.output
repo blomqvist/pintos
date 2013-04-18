@@ -1,0 +1,35 @@
+Copying tests/userprog/exec-arg into /tmp/oksGRSkLaw.dsk...
+Copying tests/userprog/child-args into /tmp/oksGRSkLaw.dsk...
+Writing command line to /tmp/1FP5yJ7kG8.dsk...
+qemu -hda /tmp/1FP5yJ7kG8.dsk -hdb /tmp/eNx7zJjJ3F.dsk -hdc /tmp/oksGRSkLaw.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Kernel command line: -q -f put exec-arg put child-args run exec-arg
+Pintos booting with 4,096 kB RAM...
+375 pages available in kernel pool.
+374 pages available in user pool.
+Calibrating timer...  6,566,400 loops/s.
+hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
+hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
+hd1:0: detected 177 sector (88 kB) disk, model "QEMU HARDDISK", serial "QM00003"
+Formatting file system...done.
+Boot complete.
+Putting 'exec-arg' into the file system...
+Putting 'child-args' into the file system...
+Executing 'exec-arg':
+(exec-arg) begin
+(args) begin
+(args) argc = 2
+(args) argv[0] = 'child-args'
+(args) argv[1] = 'childarg'
+(args) argv[2] = null
+(args) end
+(exec-arg) end
+Execution of 'exec-arg' complete.
+Timer: 91 ticks
+Thread: 0 idle ticks, 74 kernel ticks, 17 user ticks
+hd0:0: 0 reads, 0 writes
+hd0:1: 108 reads, 364 writes
+hd1:0: 177 reads, 0 writes
+Console: 1732 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
