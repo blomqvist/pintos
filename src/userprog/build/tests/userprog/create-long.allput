@@ -1,11 +1,11 @@
-Copying tests/userprog/create-long into /tmp/1nVedBmq0A.dsk...
-Writing command line to /tmp/wHkoeMjF3M.dsk...
-qemu -hda /tmp/wHkoeMjF3M.dsk -hdb /tmp/1t5Npa19PD.dsk -hdc /tmp/1nVedBmq0A.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/create-long into /tmp/sthh8x9IJ1.dsk...
+Writing command line to /tmp/DZfiifXad6.dsk...
+qemu -hda /tmp/DZfiifXad6.dsk -hdb /tmp/R4Z3gzPedI.dsk -hdc /tmp/sthh8x9IJ1.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put create-long run create-long
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  7,193,600 loops/s.
+Calibrating timer...  1,636,800 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -21,17 +21,19 @@ Executing 'create-long':
 (create-long) create("x..."): 0
 (create-long) end
 # create-long#3: process_cleanup() ENTERED
+create-long: exit(0)
+# create-long#3: process_cleanup() DONE with status 1
 # main#1: process_execute("create-long") RETURNS 3
 # main#1: process_wait(3) ENTERED
 # main#1: process_wait(3) RETURNS 0
 Execution of 'create-long' complete.
 # Preparing to power off...
-Timer: 74 ticks
-Thread: 0 idle ticks, 67 kernel ticks, 7 user ticks
+Timer: 69 ticks
+Thread: 0 idle ticks, 53 kernel ticks, 16 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 59 reads, 190 writes
 hd1:0: 89 reads, 0 writes
-Console: 1219 characters output
+Console: 1295 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

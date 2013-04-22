@@ -1,18 +1,2 @@
 FAIL
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (write-bad-fd) begin
-  (write-bad-fd) end
-  write-bad-fd: exit(0)
-Differences in `diff -u' format:
-  (write-bad-fd) begin
-  (write-bad-fd) end
-- write-bad-fd: exit(0)
-Acceptable output:
-  (write-bad-fd) begin
-  write-bad-fd: exit(-1)
-Differences in `diff -u' format:
-  (write-bad-fd) begin
-- write-bad-fd: exit(-1)
-+ (write-bad-fd) end
+Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel

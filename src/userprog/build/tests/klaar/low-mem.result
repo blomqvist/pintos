@@ -1,13 +1,1 @@
-FAIL
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (low-mem) begin
-  (low-mem) exec("child-simple"): -1
-  (low-mem) end
-  low-mem: exit(0)
-Differences in `diff -u' format:
-  (low-mem) begin
-  (low-mem) exec("child-simple"): -1
-  (low-mem) end
-- low-mem: exit(0)
+PASS

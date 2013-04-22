@@ -1,12 +1,12 @@
-Copying tests/userprog/wait-killed into /tmp/B9gyNIbfEO.dsk...
-Copying tests/userprog/child-bad into /tmp/B9gyNIbfEO.dsk...
-Writing command line to /tmp/DxjuKHizKJ.dsk...
-qemu -hda /tmp/DxjuKHizKJ.dsk -hdb /tmp/hQRUFM4737.dsk -hdc /tmp/B9gyNIbfEO.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/wait-killed into /tmp/3JmgjmpVmb.dsk...
+Copying tests/userprog/child-bad into /tmp/3JmgjmpVmb.dsk...
+Writing command line to /tmp/2C6ptRIPxz.dsk...
+qemu -hda /tmp/2C6ptRIPxz.dsk -hdb /tmp/2xysrGwgN6.dsk -hdc /tmp/3JmgjmpVmb.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put wait-killed put child-bad run wait-killed
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  6,547,200 loops/s.
+Calibrating timer...  13,094,400 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 178 sector (89 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -18,24 +18,24 @@ Executing 'wait-killed':
 (wait-killed) begin
 (child-bad) begin
 Page fault at 0x20101234: not present error reading page in kernel context.
-Interrupt 0x0e (#PF Page-Fault Exception) at eip=0xc0109703
+Interrupt 0x0e (#PF Page-Fault Exception) at eip=0xc0109723
  cr2=20101234 error=00000000
  eax=00000001 ebx=20101234 ecx=0804b5ad edx=0000000e
  esi=c011efb0 edi=00000001 esp=00000000 ebp=c011ef84
  cs=0008 ds=0010 es=0010 ss=0000
 Kernel PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-backtrace  0xc01065dc 0xc010961a 0xc01096c5 0xc010156d 0xc01016d3 0xc0109703 0xc010156d 0xc01016d3 0x8048081 0x80480bd 0x8048599.
+backtrace  0xc01065e8 0xc010963a 0xc01096e5 0xc0101579 0xc01016df 0xc0109723 0xc0101579 0xc01016df 0x8048081 0x80480bd 0x8048599.
 The `backtrace' program can make call stacks useful.
 Read "Backtraces" in the "Debugging Tools" chapter
 of the Pintos documentation for more information.
 Simply copy-paste the backtrace command line above.
 They will not get the chance to complete.
-Timer: 78 ticks
-Thread: 0 idle ticks, 65 kernel ticks, 13 user ticks
+Timer: 69 ticks
+Thread: 0 idle ticks, 59 kernel ticks, 10 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 108 reads, 366 writes
 hd1:0: 178 reads, 0 writes
-Console: 2184 characters output
+Console: 2185 characters output
 Keyboard: 0 keys pressed
 Exception: 1 page faults
 Powering off...

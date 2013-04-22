@@ -1,11 +1,11 @@
-Copying tests/userprog/wait-bad-pid into /tmp/VqMyYWX6dS.dsk...
-Writing command line to /tmp/JWYiUxrBYN.dsk...
-qemu -hda /tmp/JWYiUxrBYN.dsk -hdb /tmp/RpFsevFMzk.dsk -hdc /tmp/VqMyYWX6dS.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/wait-bad-pid into /tmp/fUHscqoZpc.dsk...
+Writing command line to /tmp/hrxbMgmugN.dsk...
+qemu -hda /tmp/hrxbMgmugN.dsk -hdb /tmp/BBvcpagsoQ.dsk -hdc /tmp/fUHscqoZpc.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put wait-bad-pid run wait-bad-pid
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  7,116,800 loops/s.
+Calibrating timer...  11,456,000 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -22,17 +22,19 @@ Executing 'wait-bad-pid':
 # wait-bad-pid#3: process_wait(201458433) RETURNS -1
 (wait-bad-pid) end
 # wait-bad-pid#3: process_cleanup() ENTERED
+wait-bad-pid: exit(0)
+# wait-bad-pid#3: process_cleanup() DONE with status 1
 # main#1: process_execute("wait-bad-pid") RETURNS 3
 # main#1: process_wait(3) ENTERED
 # main#1: process_wait(3) RETURNS 0
 Execution of 'wait-bad-pid' complete.
 # Preparing to power off...
-Timer: 105 ticks
-Thread: 0 idle ticks, 91 kernel ticks, 19 user ticks
+Timer: 59 ticks
+Thread: 0 idle ticks, 56 kernel ticks, 3 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 55 reads, 186 writes
 hd1:0: 89 reads, 0 writes
-Console: 1307 characters output
+Console: 1383 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

@@ -43,9 +43,7 @@ int sys_open(const char* file)
 int sys_read(int fd, char* buffer, unsigned length)
 {
   if (fd == STDOUT_FILENO)
-  {
     return -1; // Vi kan inte läsa från skärmen
-  }
   
   unsigned i = 0;
   char key;
@@ -67,23 +65,16 @@ int sys_read(int fd, char* buffer, unsigned length)
     }
     else
     {
-      // Läs från fil
-      struct file* read_from;
-      if ((read_from = map_find(get_filemap(), fd)) != NULL && length > 0)
-      {
-        // Filen är öppnad
-        // file_read (struct file *file, void *buffer, off_t size);
+      //Read from file
+      struct file* read_from = map_find(get_filemap(), fd);
+      
+      if(read_from != NULL && length > 0)
         return file_read(read_from, buffer, length);
-        
-      }
       else
-      {
-        // Filen är inte öppnad eller så valde vi att läsa 0 bytes
         return -1;
-      }
     }
   }
-  intr_set_level(INTR_ON);
+  //tr_set_level(INTR_ON);
   
   return length; // Så här många tecken läste jag
 }

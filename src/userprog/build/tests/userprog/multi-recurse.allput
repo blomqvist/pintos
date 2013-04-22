@@ -1,11 +1,11 @@
-Copying tests/userprog/multi-recurse into /tmp/egUpwd70C9.dsk...
-Writing command line to /tmp/IumIr5tDaX.dsk...
-qemu -hda /tmp/IumIr5tDaX.dsk -hdb /tmp/lzz7pJm0Bg.dsk -hdc /tmp/egUpwd70C9.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/multi-recurse into /tmp/UB9SkT0DEt.dsk...
+Writing command line to /tmp/b0ck5pHn50.dsk...
+qemu -hda /tmp/b0ck5pHn50.dsk -hdb /tmp/2q6zV2lZEh.dsk -hdc /tmp/UB9SkT0DEt.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put multi-recurse run 'multi-recurse 15'
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  6,950,400 loops/s.
+Calibrating timer...  9,408,000 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 97 sector (48 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -140,62 +140,94 @@ Executing 'multi-recurse 15':
 (multi-recurse) begin 0
 (multi-recurse) end 0
 # multi-recurse#18: process_cleanup() ENTERED
+multi-recurse: exit(0)
+# multi-recurse#18: process_cleanup() DONE with status 1
 # multi-recurse#17: process_execute("multi-recurse 0") RETURNS 18
 # multi-recurse#17: process_wait(18) ENTERED
 # multi-recurse#17: process_wait(18) RETURNS 0
 (multi-recurse) end 1
 # multi-recurse#17: process_cleanup() ENTERED
+multi-recurse: exit(1)
+# multi-recurse#17: process_cleanup() DONE with status 1
 # multi-recurse#16: process_wait(17) RETURNS 1
 (multi-recurse) end 2
 # multi-recurse#16: process_cleanup() ENTERED
+multi-recurse: exit(2)
+# multi-recurse#16: process_cleanup() DONE with status 1
 # multi-recurse#15: process_wait(16) RETURNS 2
 (multi-recurse) end 3
 # multi-recurse#15: process_cleanup() ENTERED
+multi-recurse: exit(3)
+# multi-recurse#15: process_cleanup() DONE with status 1
 # multi-recurse#14: process_wait(15) RETURNS 3
 (multi-recurse) end 4
 # multi-recurse#14: process_cleanup() ENTERED
+multi-recurse: exit(4)
+# multi-recurse#14: process_cleanup() DONE with status 1
 # multi-recurse#13: process_wait(14) RETURNS 4
 (multi-recurse) end 5
 # multi-recurse#13: process_cleanup() ENTERED
+multi-recurse: exit(5)
+# multi-recurse#13: process_cleanup() DONE with status 1
 # multi-recurse#12: process_wait(13) RETURNS 5
 (multi-recurse) end 6
 # multi-recurse#12: process_cleanup() ENTERED
+multi-recurse: exit(6)
+# multi-recurse#12: process_cleanup() DONE with status 1
 # multi-recurse#11: process_wait(12) RETURNS 6
 (multi-recurse) end 7
 # multi-recurse#11: process_cleanup() ENTERED
+multi-recurse: exit(7)
+# multi-recurse#11: process_cleanup() DONE with status 1
 # multi-recurse#10: process_wait(11) RETURNS 7
 (multi-recurse) end 8
 # multi-recurse#10: process_cleanup() ENTERED
+multi-recurse: exit(8)
+# multi-recurse#10: process_cleanup() DONE with status 1
 # multi-recurse#9: process_wait(10) RETURNS 8
 (multi-recurse) end 9
 # multi-recurse#9: process_cleanup() ENTERED
+multi-recurse: exit(9)
+# multi-recurse#9: process_cleanup() DONE with status 1
 # multi-recurse#8: process_wait(9) RETURNS 9
 (multi-recurse) end 10
 # multi-recurse#8: process_cleanup() ENTERED
+multi-recurse: exit(10)
+# multi-recurse#8: process_cleanup() DONE with status 1
 # multi-recurse#7: process_wait(8) RETURNS 10
 (multi-recurse) end 11
 # multi-recurse#7: process_cleanup() ENTERED
+multi-recurse: exit(11)
+# multi-recurse#7: process_cleanup() DONE with status 1
 # multi-recurse#6: process_wait(7) RETURNS 11
 (multi-recurse) end 12
 # multi-recurse#6: process_cleanup() ENTERED
+multi-recurse: exit(12)
+# multi-recurse#6: process_cleanup() DONE with status 1
 # multi-recurse#5: process_wait(6) RETURNS 12
 (multi-recurse) end 13
 # multi-recurse#5: process_cleanup() ENTERED
+multi-recurse: exit(13)
+# multi-recurse#5: process_cleanup() DONE with status 1
 # multi-recurse#4: process_wait(5) RETURNS 13
 (multi-recurse) end 14
 # multi-recurse#4: process_cleanup() ENTERED
+multi-recurse: exit(14)
+# multi-recurse#4: process_cleanup() DONE with status 1
 # multi-recurse#3: process_wait(4) RETURNS 14
 (multi-recurse) end 15
 # multi-recurse#3: process_cleanup() ENTERED
+multi-recurse: exit(15)
+# multi-recurse#3: process_cleanup() DONE with status 1
 # main#1: process_wait(3) RETURNS 15
 Execution of 'multi-recurse 15' complete.
 # Preparing to power off...
-Timer: 774 ticks
-Thread: 0 idle ticks, 74 kernel ticks, 700 user ticks
+Timer: 120 ticks
+Thread: 0 idle ticks, 72 kernel ticks, 48 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 542 reads, 202 writes
 hd1:0: 97 reads, 0 writes
-Console: 9103 characters output
+Console: 10381 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

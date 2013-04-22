@@ -60,6 +60,38 @@ void p_map_for_each(struct p_map* m,
   }
 }
 
+/*void p_map_remove(struct p_map* m, int proc_id)
+{
+  struct p_map* curr = m;
+  struct p_map* prev = NULL;
+  struct p_map* temp = m;
+
+  while (curr != NULL)
+  {
+    if (!(curr->value->proc_id == proc_id))
+    {
+      prev = curr;
+      curr = curr->next;
+    }
+    else
+    {
+      if (curr->next != NULL)
+        temp = curr->next;
+      
+      if (prev != NULL)
+        prev->next = temp;
+  
+      if (curr != m)
+      {
+        free (curr);
+        curr = temp;
+      }
+      else
+        p_map_init(m);
+    }
+  }
+}*/
+
 void p_map_remove_if(struct p_map* m,
                    bool (*cond)(p_key_t k, p_value_t v, int aux),
                    int aux)

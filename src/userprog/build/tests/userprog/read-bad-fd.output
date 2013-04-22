@@ -1,11 +1,11 @@
-Copying tests/userprog/read-bad-fd into /tmp/XsE119frGz.dsk...
-Writing command line to /tmp/bkqIvpFFGP.dsk...
-qemu -hda /tmp/bkqIvpFFGP.dsk -hdb /tmp/cxrSJOVTRn.dsk -hdc /tmp/XsE119frGz.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/read-bad-fd into /tmp/wDiHjOgK91.dsk...
+Writing command line to /tmp/onwyZ3zRd3.dsk...
+qemu -hda /tmp/onwyZ3zRd3.dsk -hdb /tmp/4hYeek3CQt.dsk -hdc /tmp/wDiHjOgK91.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put read-bad-fd run read-bad-fd
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  6,963,200 loops/s.
+Calibrating timer...  8,908,800 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -14,14 +14,25 @@ Boot complete.
 Putting 'read-bad-fd' into the file system...
 Executing 'read-bad-fd':
 (read-bad-fd) begin
-(read-bad-fd) end
-Execution of 'read-bad-fd' complete.
-Timer: 90 ticks
-Thread: 0 idle ticks, 74 kernel ticks, 16 user ticks
+Page fault at 0x4051d8f8: not present error reading page in kernel context.
+Interrupt 0x0e (#PF Page-Fault Exception) at eip=0xc0109b85
+ cr2=4051d8f8 error=00000000
+ eax=20101234 ebx=00000000 ecx=bfffff87 edx=c0119028
+ esi=20101234 edi=bfffff87 esp=c0119f54 ebp=c0119f24
+ cs=0008 ds=0010 es=0010 ss=9e2b
+Kernel PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
+backtrace  0xc01065e8 0xc010963a 0xc01096e5 0xc0101579 0xc01016df 0xc0109b85 0xc0109e2b 0xc0109765 0xc0101579 0xc01016df 0x8049ba5 0x804808a 0x8048129 0x8048605.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Simply copy-paste the backtrace command line above.
+They will not get the chance to complete.
+Timer: 63 ticks
+Thread: 0 idle ticks, 60 kernel ticks, 3 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 56 reads, 186 writes
 hd1:0: 89 reads, 0 writes
-Console: 1188 characters output
+Console: 1849 characters output
 Keyboard: 0 keys pressed
-Exception: 0 page faults
+Exception: 1 page faults
 Powering off...

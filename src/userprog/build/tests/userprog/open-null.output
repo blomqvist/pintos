@@ -1,11 +1,11 @@
-Copying tests/userprog/open-null into /tmp/VAlD6UnVBM.dsk...
-Writing command line to /tmp/NwURLLaJ7r.dsk...
-qemu -hda /tmp/NwURLLaJ7r.dsk -hdb /tmp/T9tNSF7sDE.dsk -hdc /tmp/VAlD6UnVBM.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/open-null into /tmp/lRijtnMahZ.dsk...
+Writing command line to /tmp/5cNixllch0.dsk...
+qemu -hda /tmp/5cNixllch0.dsk -hdb /tmp/IJhX6R2ULO.dsk -hdc /tmp/lRijtnMahZ.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put open-null run open-null
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  6,899,200 loops/s.
+Calibrating timer...  8,960,000 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -15,14 +15,14 @@ Putting 'open-null' into the file system...
 Executing 'open-null':
 (open-null) begin
 Kernel PANIC at ../../filesys/directory.c:125 in dir_lookup(): assertion `name != NULL' failed.
-backtrace  0xc01065dc 0xc010aa50 0xc010a3b3 0xc0109e3e 0xc0109787 0xc010156d 0xc01016d3 0x8049b09 0x8048081 0x80480b5 0x8048591.
+backtrace  0xc01065e8 0xc010a9b4 0xc010a317 0xc0109daa 0xc01097a7 0xc0101579 0xc01016df 0x8049b09 0x8048081 0x80480b5 0x8048591.
 The `backtrace' program can make call stacks useful.
 Read "Backtraces" in the "Debugging Tools" chapter
 of the Pintos documentation for more information.
 Simply copy-paste the backtrace command line above.
 They will not get the chance to complete.
-Timer: 68 ticks
-Thread: 0 idle ticks, 66 kernel ticks, 2 user ticks
+Timer: 59 ticks
+Thread: 0 idle ticks, 58 kernel ticks, 1 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 56 reads, 186 writes
 hd1:0: 89 reads, 0 writes

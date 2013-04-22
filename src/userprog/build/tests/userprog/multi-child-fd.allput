@@ -1,13 +1,13 @@
-Copying tests/userprog/multi-child-fd into /tmp/0n3Bll42Ej.dsk...
-Copying ../../tests/userprog/sample.txt into /tmp/0n3Bll42Ej.dsk...
-Copying tests/userprog/child-close into /tmp/0n3Bll42Ej.dsk...
-Writing command line to /tmp/0q246w18qz.dsk...
-qemu -hda /tmp/0q246w18qz.dsk -hdb /tmp/o5Ij1GVTvk.dsk -hdc /tmp/0n3Bll42Ej.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/multi-child-fd into /tmp/pNkRYRUHHD.dsk...
+Copying ../../tests/userprog/sample.txt into /tmp/pNkRYRUHHD.dsk...
+Copying tests/userprog/child-close into /tmp/pNkRYRUHHD.dsk...
+Writing command line to /tmp/D2ZBz9hyU4.dsk...
+qemu -hda /tmp/D2ZBz9hyU4.dsk -hdb /tmp/Anf0UEQ4gH.dsk -hdc /tmp/pNkRYRUHHD.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put multi-child-fd put sample.txt put child-close run multi-child-fd
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  3,276,800 loops/s.
+Calibrating timer...  13,094,400 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 189 sector (94 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -32,6 +32,8 @@ Executing 'multi-child-fd':
 (child-close) begin
 (child-close) end
 # child-close#4: process_cleanup() ENTERED
+child-close: exit(0)
+# child-close#4: process_cleanup() DONE with status 1
 # multi-child-fd#3: process_execute("child-close 3") RETURNS 4
 # multi-child-fd#3: process_wait(4) ENTERED
 # multi-child-fd#3: process_wait(4) RETURNS 0
@@ -39,15 +41,17 @@ Executing 'multi-child-fd':
 (multi-child-fd) verified contents of "sample.txt"
 (multi-child-fd) end
 # multi-child-fd#3: process_cleanup() ENTERED
+multi-child-fd: exit(0)
+# multi-child-fd#3: process_cleanup() DONE with status 1
 # main#1: process_wait(3) RETURNS 0
 Execution of 'multi-child-fd' complete.
 # Preparing to power off...
-Timer: 126 ticks
-Thread: 0 idle ticks, 111 kernel ticks, 15 user ticks
+Timer: 64 ticks
+Thread: 0 idle ticks, 58 kernel ticks, 6 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 155 reads, 390 writes
 hd1:0: 189 reads, 0 writes
-Console: 1935 characters output
+Console: 2089 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

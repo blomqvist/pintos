@@ -1,12 +1,12 @@
-Copying tests/userprog/read-zero into /tmp/wKZY3ERrt3.dsk...
-Copying ../../tests/userprog/sample.txt into /tmp/wKZY3ERrt3.dsk...
-Writing command line to /tmp/Th0gD9ayD1.dsk...
-qemu -hda /tmp/Th0gD9ayD1.dsk -hdb /tmp/okLRZQokR6.dsk -hdc /tmp/wKZY3ERrt3.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/read-zero into /tmp/zgxnY5bnAQ.dsk...
+Copying ../../tests/userprog/sample.txt into /tmp/zgxnY5bnAQ.dsk...
+Writing command line to /tmp/n3Y9OhUQ3m.dsk...
+qemu -hda /tmp/n3Y9OhUQ3m.dsk -hdb /tmp/OQv6t044Sa.dsk -hdc /tmp/zgxnY5bnAQ.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put read-zero put sample.txt run read-zero
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  7,654,400 loops/s.
+Calibrating timer...  13,094,400 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 91 sector (45 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -23,17 +23,19 @@ Executing 'read-zero':
 (read-zero) open "sample.txt"
 (read-zero) end
 # read-zero#3: process_cleanup() ENTERED
+read-zero: exit(0)
+# read-zero#3: process_cleanup() DONE with status 1
 # main#1: process_execute("read-zero") RETURNS 3
 # main#1: process_wait(3) ENTERED
 # main#1: process_wait(3) RETURNS 0
 Execution of 'read-zero' complete.
 # Preparing to power off...
-Timer: 73 ticks
-Thread: 0 idle ticks, 66 kernel ticks, 7 user ticks
+Timer: 56 ticks
+Thread: 0 idle ticks, 54 kernel ticks, 2 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 87 reads, 192 writes
 hd1:0: 91 reads, 0 writes
-Console: 1247 characters output
+Console: 1319 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

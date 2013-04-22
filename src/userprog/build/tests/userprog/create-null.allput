@@ -1,11 +1,11 @@
-Copying tests/userprog/create-null into /tmp/0izx1vPFpJ.dsk...
-Writing command line to /tmp/mzCzX05u4q.dsk...
-qemu -hda /tmp/mzCzX05u4q.dsk -hdb /tmp/WGvLjLR2ro.dsk -hdc /tmp/0izx1vPFpJ.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/create-null into /tmp/mmHBzcCain.dsk...
+Writing command line to /tmp/SFWR1vD7PC.dsk...
+qemu -hda /tmp/SFWR1vD7PC.dsk -hdb /tmp/0teuLlswJc.dsk -hdc /tmp/mmHBzcCain.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put create-null run create-null
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  7,091,200 loops/s.
+Calibrating timer...  6,508,800 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -19,7 +19,7 @@ Executing 'create-null':
 # create-null#3: start_process("create-null") DONE
 (create-null) begin
 Kernel PANIC at ../../filesys/directory.c:149 in dir_add(): assertion `name != NULL' failed.
-backtrace  0xc01065dc 0xc010aadf 0xc010a354 0xc0109f75 0xc01097a1 0xc010156d 0xc01016d3 0x8049aed 0x8048083 0x80480c9 0x80485a5.
+backtrace  0xc01065e8 0xc010aa43 0xc010a2b8 0xc0109ed7 0xc01097c1 0xc0101579 0xc01016df 0x8049aed 0x8048083 0x80480c9 0x80485a5.
 The `backtrace' program can make call stacks useful.
 Read "Backtraces" in the "Debugging Tools" chapter
 of the Pintos documentation for more information.
@@ -27,8 +27,8 @@ Simply copy-paste the backtrace command line above.
 # Preparing to power off...
 # WARNING: About to poweroff with 2 other threads still running!
 They will not get the chance to complete.
-Timer: 68 ticks
-Thread: 0 idle ticks, 65 kernel ticks, 3 user ticks
+Timer: 65 ticks
+Thread: 0 idle ticks, 63 kernel ticks, 2 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 58 reads, 189 writes
 hd1:0: 89 reads, 0 writes

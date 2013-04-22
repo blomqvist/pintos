@@ -298,11 +298,13 @@ process_wait (int child_id)
     temp = temp->next;
   }
   
-  if (t_child != NULL)//&& t_child->alive)
+  //TODO: Remove child when exit status is set
+  //Sync t_child->alive check before using sema_down
+  if (t_child != NULL)
   {
-    //t_curr->wait = child_id;  // Ställ att vi väntar (för debug)
     if (t_child->alive)
       sema_down(&t_child->semaphore); // Låt om oss vänta på denna tråd.
+    
     status = t_child->exit_status;
   }
   

@@ -1,11 +1,11 @@
-Copying tests/userprog/create-exists into /tmp/X1i77yTop8.dsk...
-Writing command line to /tmp/JyfEKDUtrX.dsk...
-qemu -hda /tmp/JyfEKDUtrX.dsk -hdb /tmp/E02Pq8ZB17.dsk -hdc /tmp/X1i77yTop8.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/create-exists into /tmp/LAm22iuKtu.dsk...
+Writing command line to /tmp/hYWuZNO0d7.dsk...
+qemu -hda /tmp/hYWuZNO0d7.dsk -hdb /tmp/XpX2e2yUv3.dsk -hdc /tmp/LAm22iuKtu.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put create-exists run create-exists
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  4,908,800 loops/s.
+Calibrating timer...  3,475,200 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 89 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -21,17 +21,18 @@ Executing 'create-exists':
 (create-exists) create quux.dat
 (create-exists) create quux.dat: FAILED
 # create-exists#3: process_cleanup() ENTERED
+create-exists: exit(1)
 # main#1: process_execute("create-exists") RETURNS 3
 # main#1: process_wait(3) ENTERED
 # main#1: process_wait(3) RETURNS 1
 Execution of 'create-exists' complete.
 # Preparing to power off...
-Timer: 68 ticks
-Thread: 0 idle ticks, 61 kernel ticks, 7 user ticks
+Timer: 81 ticks
+Thread: 0 idle ticks, 77 kernel ticks, 4 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 78 reads, 190 writes
 hd1:0: 89 reads, 0 writes
-Console: 1269 characters output
+Console: 1292 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

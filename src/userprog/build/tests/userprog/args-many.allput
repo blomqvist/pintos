@@ -1,11 +1,11 @@
-Copying tests/userprog/args-many into /tmp/eD9GLNc0Dg.dsk...
-Writing command line to /tmp/xFD2i7nQgv.dsk...
-qemu -hda /tmp/xFD2i7nQgv.dsk -hdb /tmp/59xW5sPyfL.dsk -hdc /tmp/eD9GLNc0Dg.dsk -p 1234 -m 4 -net none -monitor null -nographic
+Copying tests/userprog/args-many into /tmp/YagKEL0bCN.dsk...
+Writing command line to /tmp/7I417n6JGB.dsk...
+qemu -hda /tmp/7I417n6JGB.dsk -hdb /tmp/oAsBDlPwmQ.dsk -hdc /tmp/YagKEL0bCN.dsk -p 1234 -m 4 -net none -monitor null -nographic
 Kernel command line: -q -f put args-many run 'args-many a b c d e f g h i j k l m n o p q r s t u v'
 Pintos booting with 4,096 kB RAM...
 375 pages available in kernel pool.
 374 pages available in user pool.
-Calibrating timer...  1,636,800 loops/s.
+Calibrating timer...  13,824,000 loops/s.
 hd0:0: detected 129 sector (64 kB) disk, model "QEMU HARDDISK", serial "QM00001"
 hd0:1: detected 4,032 sector (1 MB) disk, model "QEMU HARDDISK", serial "QM00002"
 hd1:0: detected 88 sector (44 kB) disk, model "QEMU HARDDISK", serial "QM00003"
@@ -45,17 +45,19 @@ Executing 'args-many a b c d e f g h i j k l m n o p q r s t u v':
 (args) argv[23] = null
 (args) end
 # args-many#3: process_cleanup() ENTERED
+args-many: exit(0)
+# args-many#3: process_cleanup() DONE with status 1
 # main#1: process_execute("args-many a b c d e f g h i j k l m n o p q r s t u v") RETURNS 3
 # main#1: process_wait(3) ENTERED
 # main#1: process_wait(3) RETURNS 0
 Execution of 'args-many a b c d e f g h i j k l m n o p q r s t u v' complete.
 # Preparing to power off...
-Timer: 74 ticks
-Thread: 0 idle ticks, 60 kernel ticks, 19 user ticks
+Timer: 73 ticks
+Thread: 0 idle ticks, 65 kernel ticks, 8 user ticks
 hd0:0: 0 reads, 0 writes
 hd0:1: 55 reads, 184 writes
 hd1:0: 88 reads, 0 writes
-Console: 1958 characters output
+Console: 2029 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...
