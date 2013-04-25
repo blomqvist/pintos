@@ -52,6 +52,7 @@ int sys_read(int fd, char* buffer, unsigned length)
     if (fd == STDIN_FILENO) // Tangentbord
     {
       key = (char)input_getc();
+      
       if (key == '\r') // enter
       {
         key = '\n'; // lägg till ny rad-tecken
@@ -115,7 +116,7 @@ int sys_write(int fd, const void* buffer, unsigned length)
 
 bool sys_create(const char* file, unsigned initial_size)
 {
-  if (filesys_create(file, initial_size) && initial_size > 0)
+  if (filesys_create(file, initial_size) && initial_size >= 0)
   {
     map_insert(get_filemap(), filesys_open(file));
     return true;
@@ -130,8 +131,9 @@ bool sys_remove(const char* file)
 
 void sys_close(int fd)
 {
-  struct file* close_file;
-  if ((close_file = map_find(get_filemap(), fd)) != NULL)
+  struct file* close_file = map_find(get_filemap(), fd);
+  
+  if(close_file != NULL)
   {
     filesys_close(close_file);
     map_remove(get_filemap(), fd); // important to remove from file hEHE
@@ -140,31 +142,29 @@ void sys_close(int fd)
 
 void sys_seek(int fd, unsigned position)
 {
-  struct file* file = NULL;
-  if ((file = map_find(get_filemap(), fd)) != NULL && position <= (unsigned)sys_filesize(fd))
-  {
+  struct file* file = map_find(get_filemap(), fd);
+  
+  if (file != NULL && position <= (unsigned)sys_filesize(fd))
     file_seek(file, position);
-  }
 }
 
 unsigned sys_tell (int fd)
 {
-  struct file* file = NULL;
+  struct file* file = map_find(get_filemap(), fd);
   
-  if ((file = map_find(get_filemap(), fd)) != NULL)
-  {
+  if (file != NULL)
     return file_tell(file);
-  }
+  
   return -1;
 }
 
 int sys_filesize(int fd)
 {
-  struct file* file = NULL;
-  if ((file = map_find(get_filemap(), fd)) != NULL)
-  {
+  struct file* file = map_find(get_filemap(), fd);
+  
+  if (file != NULL)
     return file_length(file);
-  }
+  
   return -1;
 }
 

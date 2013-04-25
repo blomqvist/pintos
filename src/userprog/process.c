@@ -380,11 +380,7 @@ p_map_cleanup(p_key_t k UNUSED, p_value_t v, int aux)
     v->parent_alive = false;
   
   if (!v->parent_alive && !v->alive)
-  {
-    p_map_remove(&p_map, v->proc_id);
-    
     return true;
-  }
   
   return false;
 }

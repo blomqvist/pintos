@@ -12,8 +12,11 @@ void map_init(struct map* m)
 }
 
 value_t map_find(struct map* m, key_t k)
-{
-  return m->content[k];
+{ 
+  if(k >= 0 && k < MAP_SIZE)
+    return m->content[k];
+  
+  return NULL;
 }
 
 key_t map_insert(struct map* m, value_t v)
@@ -33,10 +36,12 @@ key_t map_insert(struct map* m, value_t v)
 
 value_t map_remove(struct map* m, key_t k)
 {
-  value_t ret_val = m->content[k];
-  m->content[k] = NULL;
+  if(m->content[k] != NULL) {
+    //free(m->content[k]);
+    m->content[k] = NULL;
+  }
   
-  return ret_val;
+  return NULL;
 }
 
 void map_for_each(struct map* m,
