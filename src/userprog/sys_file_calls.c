@@ -74,7 +74,6 @@ int sys_read(int fd, char* buffer, unsigned length)
         return -1;
     }
   }
-  //tr_set_level(INTR_ON);
   
   return length; // Så här många tecken läste jag
 }

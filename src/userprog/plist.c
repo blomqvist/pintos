@@ -1,133 +1,90 @@
+
 #include <stddef.h>
 
 #include "userprog/plist.h"
 #include "threads/malloc.h"
 
-// Initializes p_map with known default values
 void p_map_init(struct p_map* m)
 {
-  m->key = 3;
-  m->value = NULL;
-  m->next = NULL;
+  unsigned it = 0;
+  
+  for(; it < PM_SIZE; ++it)
+    m->content[it] = NULL;
 }
 
 p_value_t p_map_find(struct p_map* m, p_key_t k)
 {
-  if(m->key == k)
-    return m->value;
-  else if(m->next == NULL)
-    return NULL;
-  else
-    return p_map_find(m->next, k);
+  unsigned it = 0;
+  
+  for(; it < PM_SIZE; ++it)
+    if(m->content[it] != NULL && m->content[it]->proc_id == (int)k)
+      return m->content[it];
+  
+  return NULL;
 }
 
 p_key_t p_map_insert(struct p_map* m, p_value_t v)
 {
-  struct p_map* temp = m;
-  for (;;)
-  {
-    if (temp->value == NULL && temp->next == NULL)
-    {
-      temp->value = v;
+  unsigned it = 0;
+  
+  //Find first free element
+  while(m->content[it] != NULL && it < PM_SIZE)
+    ++it;
+  
+  //Is full
+  if(it == PM_SIZE)
+    return PM_SIZE;
+  
+  m->content[it] = v;
+  
+  //Return the index
+  return it;
+}
+
+p_value_t p_map_remove(struct p_map* m, p_key_t k)
+{
+  unsigned it = 0;
+  p_value_t ret_val = NULL;
+  
+  for(; it < PM_SIZE; ++it)
+    if(m->content[it] != NULL && m->content[it]->proc_id == (int)k) {
+      ret_val = m->content[it];
       
-      // Allokera minne för nästa objekt
-      temp->next = (void*)malloc(sizeof(struct p_map));
-      p_map_init(temp->next);
-      temp->next->key = temp->key + 1;
+      free(m->content[it]->proc_name);
+      free(m->content[it]);
       
-      // Returnera index
-      return temp->key;
+      m->content[it] = NULL;
+      
+      break;
     }
-    else
-    {
-      // Stega vidare
-      temp = temp->next;
-    }
-  }
+  
+  return ret_val;
 }
 
 void p_map_for_each(struct p_map* m,
-                  void (*exec)(p_key_t k, p_value_t v, int aux),
-                  int aux)
+		    void (*exec)(p_key_t k, p_value_t v, int aux),
+		    int aux)
 {
-  struct p_map* temp = m;
-  while (temp != NULL)
-  {
-    exec(temp->key, temp->value, aux);
-    if (temp->next == NULL)
-      break;
-    temp = temp->next;
-  }
-}
-
-/*void p_map_remove(struct p_map* m, int proc_id)
-{
-  struct p_map* curr = m;
-  struct p_map* prev = NULL;
-  struct p_map* temp = m;
-
-  while (curr != NULL)
-  {
-    if (!(curr->value->proc_id == proc_id))
-    {
-      prev = curr;
-      curr = curr->next;
-    }
-    else
-    {
-      if (curr->next != NULL)
-        temp = curr->next;
-      
-      if (prev != NULL)
-        prev->next = temp;
+  unsigned it = 0;
   
-      if (curr != m)
-      {
-        free (curr);
-        curr = temp;
-      }
-      else
-        p_map_init(m);
-    }
-  }
-}*/
+  for(; it < PM_SIZE; ++it)
+    if(m->content[it] != NULL)
+      exec(it, m->content[it], aux);
+}
 
 void p_map_remove_if(struct p_map* m,
-                   bool (*cond)(p_key_t k, p_value_t v, int aux),
-                   int aux)
+		     bool (*cond)(p_key_t k, p_value_t v, int aux),
+		     int aux)
 {
-  /**
-   * 2001 % WORKIN, BITCHES!!
-   **/
-  struct p_map* curr = m;
-  struct p_map* prev = NULL;
-  struct p_map* temp = m;
-
-  while (curr != NULL)
-  {
-    if (!cond(curr->key, curr->value, aux))
-    {
-      prev = curr;
-      curr = curr->next;
-    }
-    else
-    {
-      if (curr->next != NULL)
-        temp = curr->next;
-      
-      if (prev != NULL)
-        prev->next = temp;
+  unsigned it = 0;
   
-      if (curr != m)
-      {
-        free (curr);
-        curr = temp;
-      }
-      else
-        p_map_init(m);
-    }
-  }
+  for(; it < PM_SIZE; ++it)
+    if(m->content[it] != NULL)
+      if(cond(it, m->content[it], aux))
+	{
+	  free(m->content[it]->proc_name);
+	  free(m->content[it]);
+      
+	  m->content[it] = NULL;
+	}
 }
-
-
-

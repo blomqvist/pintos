@@ -55,18 +55,11 @@ void process_exit(int status)
  **/
 void process_exit_helper(p_key_t k UNUSED, p_value_t v, int aux)
 {
-  if (v == NULL)
-    return;
-  
   if (v->parent_id == thread_current()->tid)
-  {
     v->parent_alive = false;
-  }
   
   if (v->proc_id == thread_current()->tid)
-  {
     v->exit_status = aux;
-  }
 }
 
 /* Print a list of all running processes. The list shall include all
@@ -78,9 +71,6 @@ void process_print_list()
 
 void plist_print_row(p_key_t k UNUSED, p_value_t v, int aux UNUSED)
 {
-  if (v == NULL)
-    return;
-  
   printf("%d\t%d\t%s\t%d\t%s\t\t%s\n",
          v->proc_id,
          v->parent_id,
@@ -124,7 +114,7 @@ process_execute (const char *command_line)
   struct parameters_to_start_process arguments;
   
   /**
-   * Initiate semaphore and aquire resource
+   * Initiate semaphore and acquire resource
    **/
   sema_init(&arguments.semaphore, 0);
   arguments.parent_id = thread_current()->tid;
@@ -149,9 +139,7 @@ process_execute (const char *command_line)
   process_id = thread_id;
   
   if (process_id != -1)
-  {
     sema_down(&arguments.semaphore);
-  }
   
   /**
    * We must make sure that we are able to free command_line
@@ -164,9 +152,7 @@ process_execute (const char *command_line)
    * Check if load i successful
    **/
   if (!arguments.success)
-  {
     process_id = -1; // it was not
-  }
   
   debug("%s#%d: process_execute(\"%s\") RETURNS %d\n",
         thread_current()->name,
@@ -283,33 +269,26 @@ process_wait (int child_id)
 
   debug("%s#%d: process_wait(%d) ENTERED\n",
         cur->name, cur->tid, child_id);
-
-  struct p_map* temp = &p_map;
-  p_value_t t_child = NULL;
   
-  // Iterera igenom p_map
-  for (;;)
-  {
-    if (temp->value != NULL && temp->value->proc_id == child_id) // Vi har hittat child_thr
-      t_child = temp->value;
-    
-    if (temp->next == NULL)
-      break;
-    temp = temp->next;
-  }
+  //sys_plist();
   
-  //TODO: Remove child when exit status is set
+  p_value_t t_child = p_map_find(&p_map, child_id);
+  
+  //TODO: Remove child when exit status is set (done?)
   //Sync t_child->alive check before using sema_down
-  if (t_child != NULL)
+  //Child is null and still in the list sometimes for some reason
+  if(t_child != NULL)
   {
-    if (t_child->alive)
+    if(t_child->alive)
       sema_down(&t_child->semaphore); // Låt om oss vänta på denna tråd.
     
     status = t_child->exit_status;
+    p_map_remove(&p_map, child_id);
   }
   
   debug("%s#%d: process_wait(%d) RETURNS %d\n",
         cur->name, cur->tid, child_id, status);
+  
   return status;
 }
 
@@ -343,22 +322,26 @@ process_cleanup (void)
    * possibly before the prontf is completed.)
    **/
   
-  struct p_map* temp = &p_map;
-  while (temp != NULL)
+  unsigned it = 0;
+  
+  for(; it < PM_SIZE; ++it)
   {
-    p_value_t v = temp->value;
-    if (v != NULL && v->proc_id == thread_current()->tid)
+    p_value_t v = p_map.content[it];
+    
+    if(v != NULL && v->proc_id == thread_current()->tid)
     {
       v->alive = false;
       status = v->exit_status;
       sema_up(&v->semaphore); // sema_down() i process_wait()
       break;
     }
-    temp = temp->next;
   }
   
   map_remove_if(&cur->filemap, close_helper, 0);
   p_map_remove_if(&p_map, p_map_cleanup, thread_current()->tid);
+  
+  //Print
+  //sys_plist();
   
   printf("%s: exit(%d)\n", thread_name(), status);
   
@@ -394,15 +377,12 @@ p_map_cleanup(p_key_t k UNUSED, p_value_t v, int aux)
     return false;
   
   if (v->parent_id == aux) // aux = thread_current()->tid
-  {
     v->parent_alive = false;
-  }
   
   if (!v->parent_alive && !v->alive)
   {
-    // free malloc from start_process
-    free(v->proc_name);
-    free(v);
+    p_map_remove(&p_map, v->proc_id);
+    
     return true;
   }
   

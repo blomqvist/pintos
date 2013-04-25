@@ -1,53 +1,45 @@
-#ifndef _PLIST_H_
-#define _PLIST_H_
+#ifndef _PLIST_H
+#define _PLIST_H
 
-#include <stdbool.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "threads/synch.h"
 
-typedef int pid_t;
+#define PM_SIZE 256
 
-/**
- * Processinfo-struct
- * wait √§r mest f√∂r debug
- **/
+typedef int pid_t;
+typedef unsigned p_key_t;
+typedef struct proc_table* p_value_t;
+
 struct proc_table
 {
   bool alive;                 // Lever den
-  bool parent_alive;          // Lever f√∂r√§ldern?
+  bool parent_alive;          // Lever fˆr‰ldern?
   pid_t proc_id;              // Process-ID
-  pid_t parent_id;            // F√∂r√§lder-ID
-  pid_t wait;                 // Vem v√§ntar vi p√•?
+  pid_t parent_id;            // Fˆr‰lder-ID
+  pid_t wait;                 // Vem v‰ntar vi pÂ?
   int exit_status;            // Exit status
   struct semaphore semaphore; // Semaphore
   char* proc_name;            // Process name
 };
 
-typedef unsigned int p_key_t;
-typedef struct proc_table* p_value_t;
+struct p_map { p_value_t content[PM_SIZE]; };
 
-struct p_map
-{
-  size_t key;
-  p_value_t value;
-  
-  struct p_map* next; // next element
-};
+/* Declaration of global p_map */
+struct p_map p_map;
 
-
-struct p_map p_map; // INITIERING K√ÑN*S GALETS!! HEH :M
+//Lock lal
+struct lock lock;
 
 void p_map_init(struct p_map* m);
 p_value_t p_map_find(struct p_map* m, p_key_t k);
 p_key_t p_map_insert(struct p_map* m, p_value_t v);
+p_value_t p_map_remove(struct p_map* m, p_key_t k);
 void p_map_for_each(struct p_map* m,
-                  void (*exec)(p_key_t k, p_value_t v, int aux),
-                  int aux);
+		    void (*exec)(p_key_t k, p_value_t v, int aux),
+		    int aux);
 void p_map_remove_if(struct p_map* m,
-                   bool (*cond)(p_key_t k, p_value_t v, int aux),
-                   int aux);
-
-/* Initiering av plist map */
-struct p_map p_map;
+		     bool (*cond)(p_key_t k, p_value_t v, int aux),
+		     int aux);
 
 #endif
