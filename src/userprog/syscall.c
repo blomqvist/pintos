@@ -50,7 +50,6 @@ static void
 syscall_handler (struct intr_frame *f) 
 {
   int32_t* esp = (int32_t*)f->esp;
-  enum intr_level intr_lvl = intr_get_level();
   
   switch (*esp)
   {
@@ -65,65 +64,67 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_READ:
     {
-      intr_set_level(INTR_ON);
-      f->eax = sys_read(esp[1], (char*)esp[2], esp[3]);
-      intr_set_level(intr_lvl);
+      if((char*)esp[2] != NULL)
+	f->eax = sys_read(esp[1], (char*)esp[2], esp[3]);
+      else
+	f->eax = -1;
+      
       break;
     }
     case SYS_WRITE:
     {
-      intr_set_level(INTR_ON);
-      f->eax = sys_write(esp[1], (char*)esp[2], esp[3]);
-      intr_set_level(intr_lvl);
+      if((char*)esp[2] != NULL)
+	f->eax = sys_write(esp[1], (char*)esp[2], esp[3]);
+      else
+	f->eax = -1;
+      
       break;
     }
     case SYS_OPEN:
     {
-      intr_set_level(INTR_ON);
-      f->eax = sys_open((char*)esp[1]);
-      intr_set_level(intr_lvl);
+      if((char*)esp[1] != NULL)
+	f->eax = sys_open((char*)esp[1]);
+      else
+	f->eax = -1;
+      
       break;
     }
     case SYS_CREATE:
     {
-      intr_set_level(INTR_ON);
-      f->eax = sys_create((char*)esp[1], esp[2]);
-      intr_set_level(intr_lvl);
+      if((char*)esp[1] != NULL)
+	f->eax = sys_create((char*)esp[1], esp[2]);
+      else
+	f->eax = -1;
+      
       break;
     }
     case SYS_REMOVE:
     {
-      intr_set_level(INTR_ON);
-      f->eax = sys_remove((char*)esp[1]);
-      intr_set_level(intr_lvl);
+      if((char*)esp[1] != NULL)
+	f->eax = sys_remove((char*)esp[1]);
+      else
+	f->eax = 0;
+      
       break;
     }
     case SYS_CLOSE:
     {
-      intr_set_level(INTR_ON);
       sys_close(esp[1]); // void-funktion!
-      intr_set_level(intr_lvl);
       break;
     }
     case SYS_SEEK:
     {
-      intr_set_level(INTR_ON);
       sys_seek(esp[1], esp[2]);
-      intr_set_level(intr_lvl);
       break;
     }
     case SYS_TELL:
     {
-      intr_set_level(INTR_ON);
       f->eax = sys_tell(esp[1]);
-      intr_set_level(intr_lvl);
       break;
     }
     case SYS_FILESIZE:
     {
-      intr_set_level(INTR_ON);
       f->eax = sys_filesize(esp[1]);
-      intr_set_level(intr_lvl);
       break;
     }
     /**
@@ -146,7 +147,11 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_EXEC:
     {
-      f->eax = sys_exec((char*)esp[1]);
+      if(esp[1] != NULL)
+	f->eax = sys_exec((char*)esp[1]);
+      else
+	f->eax = -1;
+      
       break;
     }
     default:

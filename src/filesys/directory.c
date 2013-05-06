@@ -5,7 +5,7 @@
 #include "filesys/filesys.h"
 #include "filesys/inode.h"
 #include "threads/malloc.h"
-
+#include "threads/synch.h"
 /* A directory. */
 struct dir 
   {
@@ -20,6 +20,13 @@ struct dir_entry
     char name[NAME_MAX + 1];            /* Null terminated file name. */
     bool in_use;                        /* In use or free? */
   };
+
+struct lock dlock;
+
+void dir_init(void)
+{
+  lock_init(&dlock);
+}
 
 /* Creates a directory with space for ENTRY_CNT entries in the
    given SECTOR.  Returns true if successful, false on failure. */
@@ -123,12 +130,16 @@ dir_lookup (const struct dir *dir, const char *name,
 
   ASSERT (dir != NULL);
   ASSERT (name != NULL);
-
+  
+  lock_acquire(&dlock);
+  
   if (lookup (dir, name, &e, NULL))
     *inode = inode_open (e.inode_sector);
   else
     *inode = NULL;
-
+  
+  lock_release(&dlock);
+  
   return *inode != NULL;
 }
 
@@ -147,11 +158,15 @@ dir_add (struct dir *dir, const char *name, disk_sector_t inode_sector)
   
   ASSERT (dir != NULL);
   ASSERT (name != NULL);
+  
+  lock_acquire(&dlock);
 
   /* Check NAME for validity. */
-  if (*name == '\0' || strlen (name) > NAME_MAX)
+  if (*name == '\0' || strlen (name) > NAME_MAX) {
+    lock_release(&dlock);
     return false;
-
+  }
+  
   /* Check that NAME is not in use. */
   if (lookup (dir, name, NULL, NULL))
     goto done;
@@ -175,6 +190,8 @@ dir_add (struct dir *dir, const char *name, disk_sector_t inode_sector)
   success = inode_write_at (dir->inode, &e, sizeof e, ofs) == sizeof e;
 
  done:
+  lock_release(&dlock);
+  
   return success;
 }
 
@@ -191,7 +208,10 @@ dir_remove (struct dir *dir, const char *name)
 
   ASSERT (dir != NULL);
   ASSERT (name != NULL);
-
+  
+  //Goto is evil; don't use it
+  lock_acquire(&dlock);
+  
   /* Find directory entry. */
   if (!lookup (dir, name, &e, &ofs))
     goto done;
@@ -212,6 +232,9 @@ dir_remove (struct dir *dir, const char *name)
 
  done:
   inode_close (inode);
+  
+  lock_release(&dlock);
+  
   return success;
 }
 
@@ -222,15 +245,24 @@ bool
 dir_readdir (struct dir *dir, char name[NAME_MAX + 1])
 {
   struct dir_entry e;
-
+  
+  //Release on different levels
+  lock_acquire(&dlock);
+  
   while (inode_read_at (dir->inode, &e, sizeof e, dir->pos) == sizeof e) 
     {
       dir->pos += sizeof e;
       if (e.in_use)
         {
           strlcpy (name, e.name, NAME_MAX + 1);
+	  
+	  lock_release(&dlock);
+	  
           return true;
         } 
     }
+  
+  lock_release(&dlock);
+  
   return false;
 }

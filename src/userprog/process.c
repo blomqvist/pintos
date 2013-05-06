@@ -195,7 +195,7 @@ start_process (struct parameters_to_start_process* parameters)
         thread_current()->name,
         thread_current()->tid,
         success);
-     
+  
   if (success)
   {
     struct proc_table* p_table = malloc(sizeof(struct proc_table));
@@ -276,7 +276,7 @@ process_wait (int child_id)
   
   //TODO: Remove child when exit status is set (done?)
   //Sync t_child->alive check before using sema_down
-  //Child is null and still in the list sometimes for some reason
+  
   if(t_child != NULL)
   {
     if(t_child->alive)

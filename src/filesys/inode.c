@@ -8,6 +8,8 @@
 #include "threads/malloc.h"
 #include "threads/synch.h"
 
+//Inode lock
+struct lock ilock;
 
 /* Identifies an inode. */
 #define INODE_MAGIC 0x494e4f44
@@ -64,6 +66,9 @@ void
 inode_init (void) 
 {
   list_init (&open_inodes);
+  
+  //Called by filesys_init which is called in threads/init.c
+  lock_init(&ilock);
 }
 
 /* Initializes an inode with LENGTH bytes of data and
@@ -82,7 +87,9 @@ inode_create (disk_sector_t sector, off_t length)
   /* If this assertion fails, the inode structure is not exactly
      one sector in size, and you should fix that. */
   ASSERT (sizeof *disk_inode == DISK_SECTOR_SIZE);
-
+  
+  lock_acquire(&ilock);
+  
   disk_inode = calloc (1, sizeof *disk_inode);
   if (disk_inode != NULL)
     {
@@ -104,6 +111,9 @@ inode_create (disk_sector_t sector, off_t length)
         } 
       free (disk_inode);
     }
+  
+  lock_release(&ilock);
+  
   return success;
 }
 
@@ -115,7 +125,9 @@ inode_open (disk_sector_t sector)
 {
   struct list_elem *e;
   struct inode *inode;
-
+  
+  //Lock will be released on different levels
+  lock_acquire(&ilock);
   
   /* Check whether this inode is already open. */
   for (e = list_begin (&open_inodes); e != list_end (&open_inodes);
@@ -125,14 +137,19 @@ inode_open (disk_sector_t sector)
       if (inode->sector == sector) 
         {
           inode_reopen (inode);
+
+	  lock_release(&ilock);
+	  
           return inode; 
         }
     }
-
+  
   /* Allocate memory. */
   inode = malloc (sizeof *inode);
   if (inode == NULL)
   {
+    lock_release(&ilock);
+    
     return NULL;
   }
   
@@ -144,6 +161,8 @@ inode_open (disk_sector_t sector)
   inode->removed = false;
   
   disk_read (filesys_disk, inode->sector, &inode->data);
+  
+  lock_release(&ilock);
   
   return inode;
 }
@@ -172,11 +191,17 @@ inode_get_inumber (const struct inode *inode)
 void
 inode_close (struct inode *inode) 
 {
+  lock_acquire(&ilock);
+  
   /* Ignore null pointer. */
-  if (inode == NULL)
+  if (inode == NULL) {
+    lock_release(&ilock);
     return;
+  }
 
-    
+  //Lock release on a different level
+  //Can this be put in the if body?
+  
   /* Release resources if this was the last opener. */
   if (--inode->open_cnt == 0)
     {
@@ -193,8 +218,13 @@ inode_close (struct inode *inode)
         }
 
       free (inode);
+      
+      lock_release(&ilock);
+      
       return;
     }
+  
+  lock_release(&ilock);
 }
 
 /* Marks INODE to be deleted when it is closed by the last caller who
@@ -257,7 +287,7 @@ inode_read_at (struct inode *inode, void *buffer_, off_t size, off_t offset)
       bytes_read += chunk_size;
     }
   free (bounce);
-
+  
   return bytes_read;
 }
 
@@ -273,8 +303,9 @@ inode_write_at (struct inode *inode, const void *buffer_, off_t size,
   const uint8_t *buffer = buffer_;
   off_t bytes_written = 0;
   uint8_t *bounce = NULL;
-
-    
+  
+  //lock_acquire(&ilock);
+  
   while (size > 0) 
     {
       /* Sector to write, starting byte offset within sector. */
@@ -323,7 +354,9 @@ inode_write_at (struct inode *inode, const void *buffer_, off_t size,
       bytes_written += chunk_size;
     }
   free (bounce);
-
+  
+  //lock_release(&ilock);
+  
   return bytes_written;
 }
 

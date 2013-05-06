@@ -13,6 +13,9 @@
 
 struct inode;
 
+//Added in synch lab
+void dir_init(void);
+
 /* Opening and closing directories. */
 bool dir_create (disk_sector_t sector, size_t entry_cnt);
 struct dir *dir_open (struct inode *);

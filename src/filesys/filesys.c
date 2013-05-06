@@ -12,6 +12,8 @@
 /* The disk that contains the file system. */
 struct disk *filesys_disk;
 
+struct lock fslock;
+
 static void do_format (void);
 
 /* Initializes the file system module.
@@ -25,11 +27,13 @@ filesys_init (bool format)
 
   inode_init ();
   free_map_init ();
-
+  
   if (format) 
     do_format ();
 
   free_map_open ();
+  
+  lock_init(&fslock);
 }
 
 /* Shuts down the file system module, writing any unwritten data
@@ -49,6 +53,9 @@ filesys_create (const char *name, off_t initial_size)
 {
   disk_sector_t inode_sector = 0;
   struct dir *dir = dir_open_root ();
+  
+  lock_acquire(&fslock);
+  
   bool success = (dir != NULL
                   && free_map_allocate (1, &inode_sector)
                   && inode_create (inode_sector, initial_size)
@@ -56,6 +63,8 @@ filesys_create (const char *name, off_t initial_size)
   if (!success && inode_sector != 0) 
     free_map_release (inode_sector, 1);
   dir_close (dir);
+  
+  lock_release(&fslock);
   
   return success;
 }

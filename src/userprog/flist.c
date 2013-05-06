@@ -36,10 +36,8 @@ key_t map_insert(struct map* m, value_t v)
 
 value_t map_remove(struct map* m, key_t k)
 {
-  if(m->content[k] != NULL) {
-    //free(m->content[k]);
+  if(m->content[k] != NULL)
     m->content[k] = NULL;
-  }
   
   return NULL;
 }

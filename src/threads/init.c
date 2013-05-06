@@ -83,7 +83,7 @@ main (void)
      then enable console locking. */
   thread_init ();
   process_init ();
-  console_init ();  
+  console_init ();
   
   /* Greet user. */
   printf ("Pintos booting with %'zu kB RAM...\n", ram_pages * PGSIZE / 1024);
@@ -120,6 +120,9 @@ main (void)
   filesys_init (format_filesys);
 #endif
 
+  //Added in synch lab
+  dir_init();
+  
   printf ("Boot complete.\n");
   
   /* Run actions specified on kernel command line. */

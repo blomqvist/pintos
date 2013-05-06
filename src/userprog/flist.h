@@ -10,7 +10,10 @@ typedef struct file* value_t;
 
 #define MAP_SIZE 256
 
-struct map { value_t content[MAP_SIZE]; };
+struct map 
+{ 
+  value_t content[MAP_SIZE]; 
+};
 
 void map_init(struct map* m);
 value_t map_find(struct map* m, key_t k);

@@ -30,6 +30,7 @@
 int sys_open(const char* file)
 {
   struct file* temp;
+  
   if ((temp = filesys_open(file)) != NULL)
   {
     // Mata in pekaren till filen i mapen

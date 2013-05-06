@@ -23,13 +23,15 @@ struct proc_table
   char* proc_name;            // Process name
 };
 
-struct p_map { p_value_t content[PM_SIZE]; };
+struct p_map
+{ 
+  p_value_t content[PM_SIZE];
+  
+  struct lock plock;
+};
 
 /* Declaration of global p_map */
 struct p_map p_map;
-
-//Lock lal
-struct lock lock;
 
 void p_map_init(struct p_map* m);
 p_value_t p_map_find(struct p_map* m, p_key_t k);
