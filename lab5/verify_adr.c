@@ -15,11 +15,11 @@ bool verify_fix_length(void* start, int length)
 {
   long stop_addr = (long)start + length - 1;
   long temp_addr = (long)pg_round_down(start);
+  
   for (; temp_addr <= stop_addr; temp_addr += PGSIZE)
-  {
     if (pagedir_get_page(NULL, (void*)temp_addr) == NULL)
       return false;
-  }
+  
   return true;
 }
 
@@ -31,30 +31,24 @@ bool verify_variable_length(char* start)
 {
   unsigned prev_page;
   
-  if (pagedir_get_page(NULL, start) == NULL)
-  {
+  if(pagedir_get_page(NULL, start) == NULL)
     return false;
-  }
   else
-  {
     prev_page = pg_no(start);
-  }
   
   for (;;)
   {
     if (prev_page != pg_no(start))
     {
       if (pagedir_get_page(NULL, start) == NULL)
-      {
         return false;
-      }
+      
       prev_page = pg_no(start);
     }
     
     if (is_end_of_string(start))
-    {
       return true;
-    }
+    
     start++;
   }
 }

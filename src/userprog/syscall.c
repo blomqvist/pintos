@@ -19,6 +19,8 @@
 #include "userprog/sys_file_calls.h"
 #include "userprog/sys_proc_calls.h"
 
+#define BOTTOM_VADDR_PTR ((void*)0x08048000)
+
 static void syscall_handler (struct intr_frame *);
 
 void
@@ -27,6 +29,57 @@ syscall_init (void)
   intr_register_int (0x30, 3, INTR_ON, syscall_handler, "syscall");
 }
 
+bool is_valid_ptr(const void* ptr)
+{
+  if(!is_user_vaddr(ptr) || BOTTOM_VADDR_PTR > ptr)
+    return false;
+  
+  return true;
+}
+
+bool verify_fix_length(void* start, int length)
+{
+  long stop_addr = (long)start + length - 1;
+  long temp_addr = (long)pg_round_down(start);
+  
+  for(; temp_addr <= stop_addr; temp_addr += PGSIZE)
+    if(pagedir_get_page(thread_current()->pagedir, (void*)temp_addr) == NULL)
+      return false;
+  
+  return true;
+}
+
+bool verify_variable_length(char* start)
+{
+  unsigned prev_page;
+  
+  if(pagedir_get_page(thread_current()->pagedir, start) == NULL)
+    return false;
+  else
+    prev_page = pg_no(start);
+  
+  for (;;)
+  {
+    if (prev_page != pg_no(start))
+    {
+      if(pagedir_get_page(thread_current()->pagedir, start) == NULL)
+        return false;
+      
+      prev_page = pg_no(start);
+    }
+    
+    if(*start == '\0')
+      return true;
+    
+    start++;
+  }
+}
+
+void death()
+{
+  sys_exit(-1);
+  thread_exit();
+}
 
 /* This array defined the number of arguments each syscall expects.
    For example, if you want to find out the number of arguments for
@@ -51,6 +104,11 @@ syscall_handler (struct intr_frame *f)
 {
   int32_t* esp = (int32_t*)f->esp;
   
+  if(esp == NULL ||
+    !is_user_vaddr((void*)esp) ||
+    !verify_variable_length((void*)esp))
+    death();
+  
   switch (*esp)
   {
     case SYS_HALT:
@@ -64,46 +122,59 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_READ:
     {
-      if((char*)esp[2] != NULL)
-	f->eax = sys_read(esp[1], (char*)esp[2], esp[3]);
-      else
-	f->eax = -1;
+      if(!verify_variable_length((void*)esp[2]) || 
+        (char*)esp[2] == NULL)
+      {
+        death();
+        break;
+      }
       
+      f->eax = sys_read(esp[1], (char*)esp[2], esp[3]);
       break;
     }
     case SYS_WRITE:
     {
-      if((char*)esp[2] != NULL)
-	f->eax = sys_write(esp[1], (char*)esp[2], esp[3]);
-      else
-	f->eax = -1;
+      if(!verify_fix_length((char*)esp[2], esp[3]) || 
+        (char*)esp[2] == NULL)
+      {
+        death();
+        break;
+      }
       
+      f->eax = sys_write(esp[1], (char*)esp[2], esp[3]);
       break;
     }
     case SYS_OPEN:
     {
-      if((char*)esp[1] != NULL)
-	f->eax = sys_open((char*)esp[1]);
-      else
-	f->eax = -1;
+      if(!is_user_vaddr((void*)esp[1]) || 
+        (char*)esp[1] == NULL)
+      {
+        death();
+        break;
+      }
       
+      f->eax = sys_open((char*)esp[1]);
       break;
     }
     case SYS_CREATE:
     {
-      if((char*)esp[1] != NULL)
-	f->eax = sys_create((char*)esp[1], esp[2]);
-      else
-	f->eax = -1;
+      if(!verify_fix_length((void*)esp[1], esp[2]) || 
+        (char*)esp[1] == NULL ||
+        !is_user_vaddr((void*)esp[1]))
+      {
+        death();
+        break;
+      }
       
+      f->eax = sys_create((char*)esp[1], esp[2]);
       break;
     }
     case SYS_REMOVE:
     {
       if((char*)esp[1] != NULL)
-	f->eax = sys_remove((char*)esp[1]);
+        f->eax = sys_remove((char*)esp[1]);
       else
-	f->eax = 0;
+        f->eax = 0;
       
       break;
     }
@@ -147,10 +218,11 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_EXEC:
     {
-      if(esp[1] != NULL)
-	f->eax = sys_exec((char*)esp[1]);
+      if((void*)esp[1] != NULL && is_user_vaddr((void*)esp[1])
+          && pagedir_get_page(thread_current()->pagedir, (void*)esp[1]) != NULL)
+        f->eax = sys_exec((char*)esp[1]);
       else
-	f->eax = -1;
+        f->eax = -1;
       
       break;
     }
