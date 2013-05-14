@@ -39,8 +39,12 @@ bool is_valid_ptr(const void* ptr)
 
 bool verify_fix_length(void* start, int length)
 {
-  long stop_addr = (long)start + length - 1;
-  long temp_addr = (long)pg_round_down(start);
+  int* stop_addr = (int*)(start + length - 1);
+  
+  if(!is_user_vaddr((void*)stop_addr))
+    return false;
+  
+  int* temp_addr = (int*)pg_round_down(start);
   
   for(; temp_addr <= stop_addr; temp_addr += PGSIZE)
     if(pagedir_get_page(thread_current()->pagedir, (void*)temp_addr) == NULL)
@@ -105,8 +109,8 @@ syscall_handler (struct intr_frame *f)
   int32_t* esp = (int32_t*)f->esp;
   
   if(esp == NULL ||
-    !is_user_vaddr((void*)esp) ||
-    !verify_variable_length((void*)esp))
+     !is_user_vaddr((void*)esp) ||
+     !verify_variable_length((void*)esp))
     death();
   
   switch (*esp)
@@ -117,13 +121,16 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_EXIT:
     {
+      if(!is_user_vaddr((void*)esp[1]))
+	 death();
+	 
       sys_exit(esp[1]);
       thread_exit();
     }
     case SYS_READ:
     {
-      if(!verify_variable_length((void*)esp[2]) || 
-        (char*)esp[2] == NULL)
+      if(!verify_fix_length((void*)esp[2], esp[3]) ||
+	 (char*)esp[2] == NULL)
       {
         death();
         break;
@@ -146,7 +153,8 @@ syscall_handler (struct intr_frame *f)
     }
     case SYS_OPEN:
     {
-      if(!is_user_vaddr((void*)esp[1]) || 
+      if(!is_user_vaddr((void*)esp[1]) ||
+	 !verify_variable_length((void*)esp[1]) ||
         (char*)esp[1] == NULL)
       {
         death();

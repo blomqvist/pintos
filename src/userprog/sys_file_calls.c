@@ -29,9 +29,9 @@
 
 int sys_open(const char* file)
 {
-  struct file* temp;
+  struct file* temp = filesys_open(file);
   
-  if ((temp = filesys_open(file)) != NULL)
+  if(temp != NULL)
   {
     // Mata in pekaren till filen i mapen
     // filemap finns initierad i thread.h/c
@@ -100,8 +100,8 @@ int sys_write(int fd, const void* buffer, unsigned length)
   else
   {
     // Skriva till fil
-    struct file* write_to;
-    if ((write_to = map_find(get_filemap(), fd)) != NULL)
+    struct file* write_to = map_find(get_filemap(), fd);
+    if(write_to != NULL)
     {
       // Skriver buffer till write_to. Returnerar antalet skrivna tecken
       // Kan returnera ett antal tecken < length om filen är för liten
